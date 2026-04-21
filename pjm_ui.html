@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PJM Project Creator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 1100px;
+        }
+
+        h1, h2 {
+            margin-bottom: 10px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        input, select, button {
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        input, select {
+            min-width: 180px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f3f3f3;
+        }
+
+        #status {
+            margin: 12px 0;
+            font-weight: bold;
+        }
+
+        #rawResponse {
+            margin-top: 15px;
+            white-space: pre-wrap;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>PJM Projects</h1>
+
+    <div class="section">
+        <h2>Create Project</h2>
+
+        <div class="row">
+            <input id="name" placeholder="Project Name">
+            <select id="type">
+                <option value="Quest">Quest</option>
+                <option value="IWO">IWO</option>
+                <option value="SubK">SubK</option>
+            </select>
+            <select id="segment">
+                <option value="AVE">AVE</option>
+                <option value="C&L">C&L</option>
+                <option value="DEE">DEE</option>
+                <option value="PMT">PMT</option>
+                <option value="ICBM">ICBM</option>
+                <option value="AP">AP</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <input id="supplier" placeholder="Supplier">
+            <input id="value" type="number" placeholder="Value">
+            <select id="priority">
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <input id="created" type="datetime-local">
+            <input id="due" type="date">
+            <select id="user"></select>
+        </div>
+
+        <div class="row">
+            <button onclick="createProject()">Create Project</button>
+            <button onclick="loadProjects()">Refresh Projects</button>
+            <button onclick="loadUsers()">Refresh Users</button>
+        </div>
+
+        <div id="status">Ready.</div>
+        <div id="rawResponse"></div>
+    </div>
+
+    <div class="section">
+        <h2>Projects</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Project ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Segment</th>
+                    <th>Supplier</th>
+                    <th>Value</th>
+                    <th>Priority</th>
+                    <th>Create Date</th>
+                    <th>Due Date</th>
+                    <th>User ID</th>
+                </tr>
+            </thead>
+            <tbody id="projectTableBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const API_URL = "https://pjm-api.onrender.com";
+
+        async function loadUsers() {
+            const userSelect = document.getElementById("user");
+            userSelect.innerHTML = "";
+
+            try {
+                const response = await fetch(`${API_URL}/users`);
+                const users = await response.json();
+
+                if (!Array.isArray(users) || users.length === 0) {
+                    userSelect.innerHTML = `<option value="">No users found</option>`;
+                    return;
+                }
+
+                users.forEach(u => {
+                    const option = document.createElement("option");
+                    option.value = u.user_id;
+                    option.textContent = `${u.user_id} - ${u.user_name}`;
+                    userSelect.appendChild(option);
+                });
+            } catch (error) {
+                userSelect.innerHTML = `<option value="">Failed to load users</option>`;
+                console.error("loadUsers error:", error);
+            }
+        }
+
+        async function loadProjects() {
+            const tableBody = document.getElementById("projectTableBody");
+            tableBody.innerHTML = "";
+
+            try {
+                const response = await fetch(`${API_URL}/projects`);
+                const projects = await response.json();
+
+                projects.forEach(project => {
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${project.project_id ?? ""}</td>
+                        <td>${project.project_name ?? ""}</td>
+                        <td>${project.project_type ?? ""}</td>
+                        <td>${project.project_segment ?? ""}</td>
+                        <td>${project.project_supplier ?? ""}</td>
+                        <td>${project.project_value ?? ""}</td>
+                        <td>${project.project_priority ?? ""}</td>
+                        <td>${project.project_create_date ?? ""}</td>
+                        <td>${project.project_due_date ?? ""}</td>
+                        <td>${project.user_id ?? ""}</td>
+                    `;
+
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error("loadProjects error:", error);
+            }
+        }
+
+        async function createProject() {
+            const status = document.getElementById("status");
+            const rawResponse = document.getElementById("rawResponse");
+
+            const name = document.getElementById("name").value.trim();
+            const type = document.getElementById("type").value;
+            const segment = document.getElementById("segment").value;
+            const supplier = document.getElementById("supplier").value.trim();
+            const value = document.getElementById("value").value;
+            const priority = document.getElementById("priority").value;
+            const created = document.getElementById("created").value;
+            const due = document.getElementById("due").value;
+            const user = document.getElementById("user").value;
+
+            if (!name || !value || !created || !due || !user) {
+                status.textContent = "Missing required fields.";
+                rawResponse.textContent = "";
+                return;
+            }
+
+            const params = new URLSearchParams({
+                name: name,
+                type: type,
+                segment: segment,
+                supplier: supplier,
+                value: value,
+                priority: priority,
+                created: created,
+                due: due,
+                user: user
+            });
+
+            try {
+                status.textContent = "Creating project...";
+                rawResponse.textContent = "";
+
+                const response = await fetch(`${API_URL}/projects?${params.toString()}`, {
+                    method: "POST"
+                });
+
+                const text = await response.text();
+
+                status.textContent = `HTTP ${response.status} ${response.statusText}`;
+                rawResponse.textContent = text;
+
+                if (response.ok) {
+                    await loadProjects();
+                }
+            } catch (error) {
+                status.textContent = "Create failed.";
+                rawResponse.textContent = String(error);
+                console.error("createProject error:", error);
+            }
+        }
+
+        loadUsers();
+        loadProjects();
+    </script>
+
+</body>
+</html>

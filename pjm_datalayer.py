@@ -1,7 +1,7 @@
-import pyodbc
+import pymssql
 
 def get_connection():
-    return pyodbc.connect(
+    return pymssql.connect(
         "DRIVER={ODBC Driver 17 for SQL Server};"
         r"SERVER=yukiprojectmanagement.database.windows.net;"
         "DATABASE=projectmanagement;"

@@ -39,3 +39,5 @@ create table subactions(
 	action_id int not null,
 	foreign key (action_id) references actions(action_id) on delete cascade
 );
+
+select @@servername;
