@@ -1,260 +1,257 @@
-import pyodbc
+import psycopg2
 
 def get_connection():
-    return pyodbc.connect(
-        "DRIVER={ODBC Driver 18 for SQL Server};"
-        r"SERVER=yukiprojectmanagement.database.windows.net;"
-        "DATABASE=projectmanagement;"
-        "UID=kieranapgar;"
-        "PWD=Servantleadership@ABGO1;"
-        "Encrypt=yes;"
-        "TrustServerCertificate=no;"
+    return psycopg2.connect(
+        host="dpg-d7kjaeosfn5c73dg0gb0-a.oregon-postgres.render.com",
+        database="projectmanagement_ckmw",
+        user="projectmanagement_ckmw_user",
+        password="YOUR_PASSWORD",
+        port=5432,
+        sslmode="require"
     )
 
-#entry point testing
-if __name__ == "__main__":
-    conn = get_connection()
-    print("Connected!")
-    conn.close()
-
-
-#GET
+# GET
 
 def get_user():
-    conn = get_connection() 
-    cursor = conn.cursor() 
-
-    cursor.execute("SELECT * FROM dbo.users")
-    rows = cursor.fetchall()
-
-    conn.close()
-
-    return rows
-
-
-def get_project(): 
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM dbo.projects")
+    cursor.execute("SELECT * FROM users")
     rows = cursor.fetchall()
 
+    cursor.close()
     conn.close()
-
     return rows
 
 
-def get_action(): 
+def get_project():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM dbo.actions")
-
+    cursor.execute("SELECT * FROM projects")
     rows = cursor.fetchall()
 
+    cursor.close()
     conn.close()
-
     return rows
 
 
-def get_subaction(): 
+def get_action():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM dbo.subactions")
-
+    cursor.execute("SELECT * FROM actions")
     rows = cursor.fetchall()
 
+    cursor.close()
     conn.close()
-
     return rows
 
 
-#CREATE
+def get_subaction():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM subactions")
+    rows = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return rows
+
+
+# CREATE
 
 def create_user(name, email):
     conn = get_connection()
-    cursor = conn.cursor() 
-
-    cursor.execute("""INSERT INTO dbo.users (user_name, user_email) OUTPUT INSERTED.user_id values(?, ?) """, (name, email)
-    )
-    
-    row = cursor.fetchone()
-
-    conn.commit()
-    conn.close()
-
-    return row[0] if row else None
-             
-def create_project(name, type, segment, supplier, value, priority, created, due, user_id): 
-    conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""INSERT INTO dbo.projects (project_name, project_type, project_segment, project_supplier, project_value, 
-                   project_priority, project_create_date, project_due_date, user_id) OUTPUT INSERTED.project_id 
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) """, (name, type, segment, supplier, value, priority, created, due, user_id)
+    cursor.execute(
+        "INSERT INTO users (user_name, user_email) VALUES (%s, %s) RETURNING user_id",
+        (name, email)
     )
 
     row = cursor.fetchone()
-
     conn.commit()
-    conn.close()
 
+    cursor.close()
+    conn.close()
     return row[0] if row else None
 
 
-def create_action(name, priority, due, created, description, project_id): 
+def create_project(name, type, segment, supplier, value, priority, created, due, user_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""INSERT INTO dbo.actions (action_name, action_priority, action_due_date, action_create_date, 
-                   action_description, project_id) OUTPUT INSERTED.action_id 
-                   VALUES (?, ?, ?, ?, ?, ?)""", (name, priority, due, created, description, project_id)
-    )
-
+    cursor.execute("""
+        INSERT INTO projects (
+            project_name, project_type, project_segment, project_supplier, project_value,
+            project_priority, project_create_date, project_due_date, user_id
+        )
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        RETURNING project_id
+    """, (name, type, segment, supplier, value, priority, created, due, user_id))
 
     row = cursor.fetchone()
-
     conn.commit()
-    conn.close()
 
+    cursor.close()
+    conn.close()
     return row[0] if row else None
 
 
-def create_subaction(name, description, created, due, priority, action_id): 
+def create_action(name, priority, due, created, description, project_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""INSERT INTO dbo.subactions (subaction_name, subaction_description, subaction_create_date, subaction_due_date,
-                   subaction_priority, action_id) OUTPUT INSERTED.subaction_id 
-                   VALUES (?, ?, ?, ?, ?, ?)""", (name, description, created, due, priority, action_id)
-    )
+    cursor.execute("""
+        INSERT INTO actions (
+            action_name, action_priority, action_due_date, action_create_date,
+            action_description, project_id
+        )
+        VALUES (%s, %s, %s, %s, %s, %s)
+        RETURNING action_id
+    """, (name, priority, due, created, description, project_id))
 
     row = cursor.fetchone()
-
     conn.commit()
+
+    cursor.close()
     conn.close()
+    return row[0] if row else None
 
-    return row
 
-#UPDATE
-
-def update_project(project_id, name, type, segment, supplier, value, priority, created, due): 
+def create_subaction(name, description, created, due, priority, action_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""UPDATE dbo.projects 
-            SET
-                project_name = ?, 
-                project_type = ?, 
-                project_segment = ?, 
-                project_supplier = ?, 
-                project_value = ?, 
-                project_priority = ?, 
-                project_create_date = ?, 
-                project_due_date = ?
-            WHERE project_id = ?
-        """,
-        (project_id, name, type, segment, supplier, value, priority, created, due)
-    )
+    cursor.execute("""
+        INSERT INTO subactions (
+            subaction_name, subaction_description, subaction_create_date,
+            subaction_due_date, subaction_priority, action_id
+        )
+        VALUES (%s, %s, %s, %s, %s, %s)
+        RETURNING subaction_id
+    """, (name, description, created, due, priority, action_id))
 
+    row = cursor.fetchone()
     conn.commit()
-    rows_updated = cursor.rowcount 
-    
+
+    cursor.close()
     conn.close()
+    return row[0] if row else None
 
-    return rows_updated
 
+# UPDATE
 
-def update_action(action_id, name, priority, due, created, description): 
+def update_project(project_id, name, type, segment, supplier, value, priority, created, due):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""UPDATE dbo.actions 
-            SET 
-                action_name = ?, 
-                action_priority = ?, 
-                action_due_date = ?, 
-                action_create_date = ?,
-                action_description = ?
-            WHERE action_id = ?
-            """, 
-            (action_id, name, priority, due, created, description)
-    )
+    cursor.execute("""
+        UPDATE projects
+        SET
+            project_name = %s,
+            project_type = %s,
+            project_segment = %s,
+            project_supplier = %s,
+            project_value = %s,
+            project_priority = %s,
+            project_create_date = %s,
+            project_due_date = %s
+        WHERE project_id = %s
+    """, (name, type, segment, supplier, value, priority, created, due, project_id))
 
     conn.commit()
-    rows_updated = cursor.rowcount 
+    rows_updated = cursor.rowcount
 
-    conn.close() 
-
+    cursor.close()
+    conn.close()
     return rows_updated
 
 
-def update_subaction(subaction_id, name, description, created, due, priority): 
+def update_action(action_id, name, priority, due, created, description):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""UPDATE dbo.subactions
-            SET 
-                subaction_name = ?, 
-                subaction_description = ?, 
-                subaction_create_date = ?,
-                subaction_due_date = ?, 
-                subaction_priority = ?
-            WHERE subaction_id = ? 
-        """, (subaction_id, name, description, created, due, priority)
-    )
+    cursor.execute("""
+        UPDATE actions
+        SET
+            action_name = %s,
+            action_priority = %s,
+            action_due_date = %s,
+            action_create_date = %s,
+            action_description = %s
+        WHERE action_id = %s
+    """, (name, priority, due, created, description, action_id))
 
-    conn.commit() 
-    rows_updated = cursor.rowcount 
+    conn.commit()
+    rows_updated = cursor.rowcount
 
+    cursor.close()
     conn.close()
-
     return rows_updated
 
 
-#DELETE
+def update_subaction(subaction_id, name, description, created, due, priority):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE subactions
+        SET
+            subaction_name = %s,
+            subaction_description = %s,
+            subaction_create_date = %s,
+            subaction_due_date = %s,
+            subaction_priority = %s
+        WHERE subaction_id = %s
+    """, (name, description, created, due, priority, subaction_id))
+
+    conn.commit()
+    rows_updated = cursor.rowcount
+
+    cursor.close()
+    conn.close()
+    return rows_updated
+
+
+# DELETE
 
 def delete_project(project_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""DELETE FROM dbo.projects WHERE project_id = ?""", (project_id,)
-    )
-
+    cursor.execute("DELETE FROM projects WHERE project_id = %s", (project_id,))
     rows_deleted = cursor.rowcount
 
     conn.commit()
+    cursor.close()
     conn.close()
-
     return rows_deleted
 
-  
-def delete_action(action_id): 
+
+def delete_action(action_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""DELETE FROM dbo.actions where action_id = ?""", (action_id,)
-    )
-
+    cursor.execute("DELETE FROM actions WHERE action_id = %s", (action_id,))
     rows_deleted = cursor.rowcount
 
     conn.commit()
+    cursor.close()
     conn.close()
-
     return rows_deleted
 
-def delete_subaction(subaction_id): 
+
+def delete_subaction(subaction_id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""DELETE FROM dbo.subactions where sub_id = ?""", (subaction_id,)
-    )
-
+    cursor.execute("DELETE FROM subactions WHERE subaction_id = %s", (subaction_id,))
     rows_deleted = cursor.rowcount
 
     conn.commit()
+    cursor.close()
     conn.close()
-
     return rows_deleted
-
