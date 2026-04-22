@@ -86,13 +86,13 @@ def create_user(name, email):
 
     return row[0] if row else None
              
-def create_project(name, type, segment, supplier, value, priority, created, due, user): 
+def create_project(name, type, segment, supplier, value, priority, created, due, user_id): 
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""INSERT INTO dbo.projects (project_name, project_type, project_segment, project_supplier, project_value, 
                    project_priority, project_create_date, project_due_date, user_id) OUTPUT INSERTED.project_id 
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) """, (name, type, segment, supplier, value, priority, created, due, user)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) """, (name, type, segment, supplier, value, priority, created, due, user_id)
     )
 
     row = cursor.fetchone()
@@ -103,13 +103,13 @@ def create_project(name, type, segment, supplier, value, priority, created, due,
     return row[0] if row else None
 
 
-def create_action(name, priority, due, created, description, project): 
+def create_action(name, priority, due, created, description, project_id): 
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""INSERT INTO dbo.actions (action_name, action_priority, action_due_date, action_create_date, 
                    action_description, project_id) OUTPUT INSERTED.action_id 
-                   VALUES (?, ?, ?, ?, ?, ?)""", (name, priority, due, created, description, project)
+                   VALUES (?, ?, ?, ?, ?, ?)""", (name, priority, due, created, description, project_id)
     )
 
 
@@ -121,13 +121,13 @@ def create_action(name, priority, due, created, description, project):
     return row[0] if row else None
 
 
-def create_subaction(name, description, created, due, priority, action): 
+def create_subaction(name, description, created, due, priority, action_id): 
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""INSERT INTO dbo.subactions (subaction_name, subaction_description, subaction_create_date, subaction_due_date,
                    subaction_priority, action_id) OUTPUT INSERTED.subaction_id 
-                   VALUES (?, ?, ?, ?, ?, ?)""", (name, description, created, due, priority, action)
+                   VALUES (?, ?, ?, ?, ?, ?)""", (name, description, created, due, priority, action_id)
     )
 
     row = cursor.fetchone()
@@ -139,7 +139,7 @@ def create_subaction(name, description, created, due, priority, action):
 
 #UPDATE
 
-def update_project(project_id, name, type, segment, supplier, value, priority, created, due, user): 
+def update_project(project_id, name, type, segment, supplier, value, priority, created, due): 
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -152,12 +152,10 @@ def update_project(project_id, name, type, segment, supplier, value, priority, c
                 project_value = ?, 
                 project_priority = ?, 
                 project_create_date = ?, 
-                project_due = ?, 
-                project_user = ?,
                 project_due_date = ?
             WHERE project_id = ?
         """,
-        (project_id, name, type, segment, supplier, value, priority, created, due, user)
+        (project_id, name, type, segment, supplier, value, priority, created, due)
     )
 
     conn.commit()
