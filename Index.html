@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PJM App</title>
+</head>
+<body>
+
+<h1>PJM Project Manager</h1>
+
+<!-- USERS -->
+<h2>Users</h2>
+<button onclick="loadUsers()">Load Users</button>
+<ul id="users"></ul>
+
+<h3>Create User</h3>
+<input id="user_name" placeholder="Name">
+<input id="user_email" placeholder="Email">
+<button onclick="createUser()">Create</button>
+
+<hr>
+
+<!-- PROJECTS -->
+<h2>Projects</h2>
+<input id="filter_user_id" placeholder="User ID (optional)">
+<button onclick="loadProjects()">Load Projects</button>
+<ul id="projects"></ul>
+
+<h3>Create Project</h3>
+<input id="p_name" placeholder="Name">
+<input id="p_type" placeholder="Type">
+<input id="p_segment" placeholder="Segment">
+<input id="p_supplier" placeholder="Supplier">
+<input id="p_value" placeholder="Value">
+<input id="p_priority" placeholder="Priority">
+<input id="p_created" placeholder="Created">
+<input id="p_due" placeholder="Due">
+<input id="p_user" placeholder="User ID">
+<button onclick="createProject()">Create</button>
+
+<hr>
+
+<!-- ACTIONS -->
+<h2>Actions</h2>
+<input id="project_id_actions" placeholder="Project ID">
+<button onclick="loadActions()">Load Actions</button>
+<ul id="actions"></ul>
+
+<h3>Create Action</h3>
+<input id="a_name" placeholder="Name">
+<input id="a_priority" placeholder="Priority">
+<input id="a_due" placeholder="Due">
+<input id="a_created" placeholder="Created">
+<input id="a_desc" placeholder="Description">
+<input id="a_project" placeholder="Project ID">
+<button onclick="createAction()">Create</button>
+
+<hr>
+
+<!-- SUBACTIONS -->
+<h2>Subactions</h2>
+<input id="action_id_sub" placeholder="Action ID">
+<button onclick="loadSubactions()">Load Subactions</button>
+<ul id="subactions"></ul>
+
+<h3>Create Subaction</h3>
+<input id="s_name" placeholder="Name">
+<input id="s_desc" placeholder="Description">
+<input id="s_created" placeholder="Created">
+<input id="s_due" placeholder="Due">
+<input id="s_priority" placeholder="Priority">
+<input id="s_action" placeholder="Action ID">
+<button onclick="createSubaction()">Create</button>
+
+<script>
+
+const BASE_URL = "https://your-render-url.onrender.com";
+
+// USERS
+async function loadUsers() {
+    const res = await fetch(`${BASE_URL}/users`);
+    const data = await res.json();
+
+    const list = document.getElementById("users");
+    list.innerHTML = "";
+
+    data.forEach(u => {
+        const li = document.createElement("li");
+        li.innerText = `${u.user_id} | ${u.user_name} | ${u.user_email}`;
+        list.appendChild(li);
+    });
+}
+
+async function createUser() {
+    const name = document.getElementById("user_name").value;
+    const email = document.getElementById("user_email").value;
+
+    await fetch(`${BASE_URL}/users?name=${name}&email=${email}`, {
+        method: "POST"
+    });
+
+    loadUsers();
+}
+
+// PROJECTS
+async function loadProjects() {
+    const userId = document.getElementById("filter_user_id").value;
+
+    let url = `${BASE_URL}/projects`;
+    if (userId) url += `?user_id=${userId}`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const list = document.getElementById("projects");
+    list.innerHTML = "";
+
+    data.forEach(p => {
+        const li = document.createElement("li");
+        li.innerText = `${p.project_id} | ${p.project_name}`;
+        list.appendChild(li);
+    });
+}
+
+async function createProject() {
+    const params = new URLSearchParams({
+        name: p_name.value,
+        type: p_type.value,
+        segment: p_segment.value,
+        supplier: p_supplier.value,
+        value: p_value.value,
+        priority: p_priority.value,
+        created: p_created.value,
+        due: p_due.value,
+        user: p_user.value
+    });
+
+    await fetch(`${BASE_URL}/projects?${params}`, { method: "POST" });
+    loadProjects();
+}
+
+// ACTIONS
+async function loadActions() {
+    const projectId = document.getElementById("project_id_actions").value;
+
+    const res = await fetch(`${BASE_URL}/actions?project_id=${projectId}`);
+    const data = await res.json();
+
+    const list = document.getElementById("actions");
+    list.innerHTML = "";
+
+    data.forEach(a => {
+        const li = document.createElement("li");
+        li.innerText = `${a.action_id} | ${a.action_name}`;
+        list.appendChild(li);
+    });
+}
+
+async function createAction() {
+    const params = new URLSearchParams({
+        name: a_name.value,
+        priority: a_priority.value,
+        due: a_due.value,
+        created: a_created.value,
+        description: a_desc.value,
+        project: a_project.value
+    });
+
+    await fetch(`${BASE_URL}/actions?${params}`, { method: "POST" });
+    loadActions();
+}
+
+// SUBACTIONS
+async function loadSubactions() {
+    const actionId = document.getElementById("action_id_sub").value;
+
+    const res = await fetch(`${BASE_URL}/subactions?action_id=${actionId}`);
+    const data = await res.json();
+
+    const list = document.getElementById("subactions");
+    list.innerHTML = "";
+
+    data.forEach(s => {
+        const li = document.createElement("li");
+        li.innerText = `${s.subaction_id} | ${s.subaction_name}`;
+        list.appendChild(li);
+    });
+}
+
+async function createSubaction() {
+    const params = new URLSearchParams({
+        name: s_name.value,
+        description: s_desc.value,
+        created: s_created.value,
+        due: s_due.value,
+        priority: s_priority.value,
+        action: s_action.value
+    });
+
+    await fetch(`${BASE_URL}/subactions?${params}`, { method: "POST" });
+    loadSubactions();
+}
+
+</script>
+
+</body>
+</html>
