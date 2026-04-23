@@ -31,16 +31,14 @@ h1 {
     color:#777;
 }
 
-/* LOGO */
 .logo {
     height:30px;
-    opacity:.9;
 }
 
 /* SECTIONS */
 .section {
     background:white;
-    padding:10px;
+    padding:12px;
     border-radius:10px;
     margin-bottom:12px;
 }
@@ -68,29 +66,17 @@ input, select, textarea {
 
     font-size:11px;
     font-family:'Inter', sans-serif;
-    color:#333;
 
     width:100%;
     box-sizing:border-box;
-
     appearance:none;
 }
 
-/* placeholder centered */
+/* placeholder */
 input::placeholder,
 textarea::placeholder {
     text-align:center;
     color:#999;
-}
-
-input, textarea, select {
-    text-align:left;
-}
-
-/* textarea */
-textarea {
-    height:28px;
-    resize:none;
 }
 
 /* BUTTON */
@@ -103,49 +89,44 @@ button {
     background:#007aff;
     color:white;
     cursor:pointer;
-    width:auto;
 }
 
 button:hover {
     background:#005ecb;
 }
 
-/* spacing for buttons */
 .section button:last-child {
     margin-top:10px;
 }
 
-/* TABLE */
-table {
-    width:100%;
-    border-collapse:collapse;
+/* LIST UI */
+.list {
     margin-top:6px;
 }
 
-th {
-    text-align:left;
-    font-size:10px;
-    color:#777;
-    padding:4px;
-}
-
-td {
-    padding:5px;
+.list-item {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:6px 8px;
     border-bottom:1px solid #eee;
     font-size:11px;
+    cursor:pointer;
 }
 
-#users td {
-    font-size:10px;
-}
-
-tr:hover {
+.list-item:hover {
     background:#f0f6ff;
 }
 
-.complete {
-    opacity:.5;
-    text-decoration:line-through;
+.left {
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.meta {
+    font-size:10px;
+    color:#777;
 }
 
 /* LAYOUT */
@@ -168,9 +149,9 @@ tr:hover {
 <div class="subtitle">Y.U.K.I Suite</div>
 </div>
 
-<!-- LOGO FIX -->
-<img src="Logo.png" class="logo"
-     onerror="this.onerror=null;this.src='https://via.placeholder.com/100?text=Logo';console.log('Logo failed to load — check file path');">
+<!-- LOGO -->
+<img src="./Logo.png" class="logo"
+     onerror="this.src='https://via.placeholder.com/80?text=Logo'">
 </div>
 
 <div class="layout">
@@ -183,29 +164,12 @@ tr:hover {
 
 <button onclick="loadProjects()">Load</button>
 
-<table id="projects"><tbody></tbody></table>
+<div id="projects" class="list"></div>
 
 <div class="row">
 <input id="p_name" placeholder="Project Name">
-
-<select id="p_type">
-<option value="">Type</option>
-<option>Subk</option><option>IWO</option><option>Quest</option>
-</select>
-
-<select id="p_segment">
-<option value="">Segment</option>
-<option>1</option><option>2</option><option>3</option>
-</select>
-
 <input id="p_supplier" placeholder="Supplier">
 <input id="p_value" placeholder="Value">
-
-<select id="p_priority">
-<option value="">Priority</option>
-<option>High</option><option>Medium</option><option>Low</option>
-</select>
-
 <input type="date" id="p_due">
 <input id="p_user" placeholder="User ID">
 </div>
@@ -217,27 +181,14 @@ tr:hover {
 <div class="section">
 <h3>Actions</h3>
 
-<table id="actions">
-<thead>
-<tr>
-<th></th>
-<th>Name</th>
-<th>Priority</th>
-<th>Due</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
+<div id="actions" class="list"></div>
 
 <div class="row">
 <input id="a_name" placeholder="Action Name">
-
 <select id="a_priority">
 <option value="">Priority</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
-
 <input type="date" id="a_due">
 <textarea id="a_desc" placeholder="Description"></textarea>
 <input id="a_project" placeholder="Project ID">
@@ -250,16 +201,14 @@ tr:hover {
 <div class="section">
 <h3>Subactions</h3>
 
-<table id="subactions"><tbody></tbody></table>
+<div id="subactions" class="list"></div>
 
 <div class="row">
 <input id="s_name" placeholder="Subaction Name">
-
 <select id="s_priority">
 <option value="">Priority</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
-
 <input type="date" id="s_due">
 <textarea id="s_desc" placeholder="Description"></textarea>
 <input id="s_action" placeholder="Action ID">
@@ -275,7 +224,7 @@ tr:hover {
 <div class="section">
 <h3>Users</h3>
 <button onclick="loadUsers()">Load</button>
-<table id="users"><tbody></tbody></table>
+<div id="users" class="list"></div>
 </div>
 
 </div>
@@ -288,7 +237,9 @@ tr:hover {
 async function loadUsers() {
     const data = await (await fetch("/users")).json();
     users.innerHTML = data.map(u =>
-        `<tr onclick="p_user.value=${u.user_id}"><td>${u.user_name}</td></tr>`
+        `<div class="list-item" onclick="p_user.value=${u.user_id}">
+            ${u.user_name}
+        </div>`
     ).join("");
 }
 
@@ -296,10 +247,12 @@ async function loadUsers() {
 async function loadProjects() {
     const data = await (await fetch("/projects")).json();
     projects.innerHTML = data.map(p =>
-        `<tr onclick="a_project.value=${p.project_id};loadActions()">
-        <td>${p.project_name}</td>
-        <td><button onclick="deleteProject(${p.project_id});event.stopPropagation()">X</button></td>
-        </tr>`
+        `<div class="list-item" onclick="a_project.value=${p.project_id};loadActions()">
+            <div class="left">
+                <div>${p.project_name}</div>
+            </div>
+            <button onclick="deleteProject(${p.project_id});event.stopPropagation()">X</button>
+        </div>`
     ).join("");
 }
 
@@ -308,13 +261,42 @@ async function loadActions() {
     let data = await (await fetch(`/actions?project_id=${a_project.value}`)).json();
 
     actions.innerHTML = data.map(a =>
-        `<tr class="${a.action_status?'complete':''}">
-        <td><input type="checkbox" ${a.action_status?"checked":""}></td>
-        <td>${a.action_name}</td>
-        <td>${a.action_priority || ""}</td>
-        <td>${a.action_due_date || ""}</td>
-        <td>${a.action_description || ""}</td>
-        </tr>`
+        `<div class="list-item" onclick="s_action.value=${a.action_id};loadSubactions()">
+
+            <div class="left">
+                <input type="checkbox" ${a.action_status?"checked":""}
+                onclick="completeAction(${a.action_id});event.stopPropagation()">
+
+                <div>
+                    <div>${a.action_name}</div>
+                    <div class="meta">
+                        ${a.action_priority || ""} ${a.action_due_date || ""}
+                    </div>
+                </div>
+            </div>
+
+        </div>`
+    ).join("");
+}
+
+// SUBACTIONS
+async function loadSubactions() {
+    let data = await (await fetch(`/subactions?action_id=${s_action.value}`)).json();
+
+    subactions.innerHTML = data.map(s =>
+        `<div class="list-item">
+            <div class="left">
+                <input type="checkbox" ${s.subaction_status?"checked":""}
+                onclick="completeSubaction(${s.subaction_id})">
+
+                <div>
+                    <div>${s.subaction_name}</div>
+                    <div class="meta">
+                        ${s.subaction_priority || ""} ${s.subaction_due_date || ""}
+                    </div>
+                </div>
+            </div>
+        </div>`
     ).join("");
 }
 
