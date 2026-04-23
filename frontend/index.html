@@ -9,7 +9,7 @@
 body {
     font-family: 'Inter', sans-serif;
     background:#f5f6f8;
-    padding:20px;
+    padding:16px;
 }
 
 /* HEADER */
@@ -17,74 +17,74 @@ body {
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:20px;
+    margin-bottom:16px;
 }
 
 h1 {
     font-weight:400;
-    font-size:20px;
+    font-size:18px;
     margin:0;
 }
 
 .subtitle {
-    font-size:12px;
+    font-size:11px;
     color:#777;
 }
 
 /* LOGO */
 .logo {
-    height:34px;
+    height:30px;
     opacity:.8;
 }
 
 /* SECTIONS */
 .section {
     background:white;
-    padding:12px;
+    padding:10px;
     border-radius:10px;
-    margin-bottom:12px;
+    margin-bottom:10px;
 }
 
 h3 {
     font-weight:500;
-    font-size:14px;
-    margin-bottom:10px;
-}
-
-/* INPUT GRID (KEY FIX) */
-.row {
-    display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap:6px;
+    font-size:13px;
     margin-bottom:8px;
 }
 
-/* INPUTS */
-input, select {
-    height:30px;
-    padding:4px 6px;
-    border:1px solid #ddd;
-    border-radius:6px;
-    font-size:12px;
-    width:100%;
+/* GRID (TIGHTER) */
+.row {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap:6px;
+    margin-top:8px;
 }
 
-textarea {
-    height:30px;
+/* INPUTS (SMALLER) */
+input, select, textarea {
+    height:28px;
     padding:4px 6px;
     border:1px solid #ddd;
     border-radius:6px;
-    font-size:12px;
+    font-size:11px;
     width:100%;
+    box-sizing:border-box;
+}
+
+/* description */
+textarea {
+    height:28px;
+    resize:none;
 }
 
 /* BUTTON */
 button {
+    height:24px;
+    padding:0 8px;
+    font-size:10px;
+    border:none;
+    border-radius:6px;
     background:#007aff;
     color:white;
-    border:none;
-    padding:6px 10px;
-    border-radius:6px;
     cursor:pointer;
 }
 
@@ -96,11 +96,18 @@ button:hover {
 table {
     width:100%;
     border-collapse:collapse;
+    margin-top:6px;
 }
 
 td {
-    padding:6px;
+    padding:5px;
     border-bottom:1px solid #eee;
+    font-size:11px;
+}
+
+/* USERS SMALLER */
+#users td {
+    font-size:10px;
 }
 
 tr:hover {
@@ -112,13 +119,14 @@ tr:hover {
     text-decoration:line-through;
 }
 
+/* LAYOUT */
 .layout {
     display:flex;
-    gap:20px;
+    gap:16px;
 }
 
 .sidebar {
-    width:260px;
+    width:220px;
 }
 </style>
 </head>
@@ -148,13 +156,28 @@ tr:hover {
 
 <div class="row">
 <input id="p_name" placeholder="Project Name">
-<select id="p_type"><option value="">Type</option><option>Subk</option><option>IWO</option><option>Quest</option></select>
-<select id="p_segment"><option value="">Segment</option><option>1</option><option>2</option><option>3</option></select>
+
+<select id="p_type">
+<option value="">Type</option>
+<option>Subk</option><option>IWO</option><option>Quest</option>
+</select>
+
+<select id="p_segment">
+<option value="">Segment</option>
+<option>1</option><option>2</option><option>3</option>
+</select>
+
 <input id="p_supplier" placeholder="Supplier">
 <input id="p_value" placeholder="Value">
-<select id="p_priority"><option value="">Priority</option><option>High</option><option>Medium</option><option>Low</option></select>
+
+<select id="p_priority">
+<option value="">Priority</option>
+<option>High</option><option>Medium</option><option>Low</option>
+</select>
+
 <input type="date" id="p_due">
 <input id="p_user" placeholder="User ID">
+
 <button onclick="createProject()">Create</button>
 </div>
 </div>
@@ -167,10 +190,16 @@ tr:hover {
 
 <div class="row">
 <input id="a_name" placeholder="Action Name">
-<select id="a_priority"><option value="">Priority</option><option>High</option><option>Medium</option><option>Low</option></select>
+
+<select id="a_priority">
+<option value="">Priority</option>
+<option>High</option><option>Medium</option><option>Low</option>
+</select>
+
 <input type="date" id="a_due">
 <textarea id="a_desc" placeholder="Description"></textarea>
 <input id="a_project" placeholder="Project ID">
+
 <button onclick="createAction()">Create</button>
 </div>
 </div>
@@ -183,10 +212,16 @@ tr:hover {
 
 <div class="row">
 <input id="s_name" placeholder="Subaction Name">
-<select id="s_priority"><option value="">Priority</option><option>High</option><option>Medium</option><option>Low</option></select>
+
+<select id="s_priority">
+<option value="">Priority</option>
+<option>High</option><option>Medium</option><option>Low</option>
+</select>
+
 <input type="date" id="s_due">
 <textarea id="s_desc" placeholder="Description"></textarea>
 <input id="s_action" placeholder="Action ID">
+
 <button onclick="createSubaction()">Create</button>
 </div>
 </div>
