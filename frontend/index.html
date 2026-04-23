@@ -67,14 +67,14 @@
         }
 
         textarea {
+            width: 260px;
+            height: 80px;
             padding: 6px 8px;
             border: 1px solid #e0e0e0;
             border-radius: 6px;
             font-size: 12px;
             background: #fafafa;
-            min-width: 260px;
-            min-height: 80px;
-            resize: vertical;
+            resize: none;
         }
 
         button {
@@ -85,12 +85,10 @@
             color: white;
             cursor: pointer;
             font-size: 12px;
-            transition: background 0.18s ease, transform 0.12s ease;
         }
 
         button:hover {
             background: #005ecb;
-            transform: translateY(-1px);
         }
 
         table {
@@ -106,7 +104,6 @@
 
         tbody tr {
             cursor: pointer;
-            transition: background 0.15s ease;
         }
 
         tbody tr:hover {
@@ -127,7 +124,6 @@
         <div class="subtitle">Y.U.K.I Suite</div>
     </div>
 
-    <!-- FIXED PATH -->
     <img src="/Logo_Redesign_AF_Logo.png" class="logo">
 </div>
 
@@ -139,36 +135,33 @@
 <div class="section">
 <h2>Projects</h2>
 
-<div class="row">
-<input id="filter_user_id" placeholder="User ID">
 <button onclick="loadProjects()">Load</button>
-</div>
 
 <table id="projects"><tbody></tbody></table>
 
 <div class="row">
-<input id="p_name" placeholder="Name" required>
+<input id="p_name" placeholder="Name">
 
-<select id="p_type" required>
+<select id="p_type">
 <option value="">-Select Type-</option>
 <option>Subk</option><option>IWO</option><option>Quest</option>
 </select>
 
-<select id="p_segment" required>
+<select id="p_segment">
 <option value="">-Select Segment-</option>
 <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
 </select>
 
-<input id="p_supplier" placeholder="Supplier" required>
-<input id="p_value" placeholder="Value" required>
+<input id="p_supplier" placeholder="Supplier">
+<input id="p_value" placeholder="Value">
 
-<select id="p_priority" required>
+<select id="p_priority">
 <option value="">-Select Priority-</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
 
-<input type="date" id="p_due" required>
-<input id="p_user" placeholder="User ID" required>
+<input type="date" id="p_due">
+<input id="p_user" placeholder="User ID">
 
 <button onclick="createProject()">Create</button>
 </div>
@@ -178,26 +171,19 @@
 <div class="section">
 <h2>Actions</h2>
 
-<div class="row">
-<input id="project_id_actions" placeholder="Project ID">
-<button onclick="loadActions()">Load</button>
-</div>
-
 <table id="actions"><tbody></tbody></table>
 
 <div class="row">
-<input id="a_name" placeholder="Name" required>
+<input id="a_name" placeholder="Name">
 
-<select id="a_priority" required>
+<select id="a_priority">
 <option value="">-Select Priority-</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
 
-<input type="date" id="a_due" required>
-
-<textarea id="a_desc" placeholder="Description" required></textarea>
-
-<input id="a_project" placeholder="Project ID" required>
+<input type="date" id="a_due">
+<textarea id="a_desc" placeholder="Description"></textarea>
+<input id="a_project" placeholder="Project ID">
 
 <button onclick="createAction()">Create</button>
 </div>
@@ -207,26 +193,19 @@
 <div class="section">
 <h2>Subactions</h2>
 
-<div class="row">
-<input id="action_id_sub" placeholder="Action ID">
-<button onclick="loadSubactions()">Load</button>
-</div>
-
 <table id="subactions"><tbody></tbody></table>
 
 <div class="row">
-<input id="s_name" placeholder="Name" required>
+<input id="s_name" placeholder="Name">
 
-<select id="s_priority" required>
+<select id="s_priority">
 <option value="">-Select Priority-</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
 
-<input type="date" id="s_due" required>
-
-<textarea id="s_desc" placeholder="Description" required></textarea>
-
-<input id="s_action" placeholder="Action ID" required>
+<input type="date" id="s_due">
+<textarea id="s_desc" placeholder="Description"></textarea>
+<input id="s_action" placeholder="Action ID">
 
 <button onclick="createSubaction()">Create</button>
 </div>
@@ -238,8 +217,8 @@
 
 <div class="section">
 <h2>Create User</h2>
-<input id="user_name" placeholder="Name" required>
-<input id="user_email" placeholder="Email" required>
+<input id="user_name" placeholder="Name">
+<input id="user_email" placeholder="Email">
 <button onclick="createUser()">Add</button>
 </div>
 
@@ -255,88 +234,65 @@
 
 <script>
 
-// VALIDATION
-function validate(fields) {
-    for (let f of fields) {
-        if (!f.value) {
-            alert("Please fill all fields");
-            return false;
-        }
-    }
-    return true;
-}
+// USERS
+async function loadUsers() {
+    const data = await (await fetch("/users")).json();
+    users.querySelector("tbody").innerHTML =
+        data.map(u => `<tr data-id="${u.user_id}"><td>#${u.user_id} | ${u.user_name}</td></tr>`).join("");
 
-function handleRowSelection(tableId) {
-    const table = document.getElementById(tableId);
-    table.querySelectorAll("tbody tr").forEach(row => {
+    document.querySelectorAll("#users tbody tr").forEach(row => {
         row.onclick = () => {
-            table.querySelectorAll("tbody tr").forEach(r => r.classList.remove("selected"));
+            document.querySelectorAll("#users tr").forEach(r => r.classList.remove("selected"));
             row.classList.add("selected");
+
+            // AUTO FILL USER ID
+            p_user.value = row.dataset.id;
         };
     });
 }
 
-// USERS
-async function createUser() {
-    if (!validate([user_name, user_email])) return;
-
-    const params = new URLSearchParams({
-        name: user_name.value,
-        email: user_email.value
-    });
-
-    await fetch(`/users?${params}`, { method: "POST" });
-}
-
 // PROJECTS
-async function createProject() {
-    if (!validate([p_name,p_type,p_segment,p_supplier,p_value,p_priority,p_due,p_user])) return;
+async function loadProjects() {
+    const data = await (await fetch("/projects")).json();
 
-    const params = new URLSearchParams({
-        name: p_name.value,
-        type: p_type.value,
-        segment: p_segment.value,
-        supplier: p_supplier.value,
-        value: p_value.value,
-        priority: p_priority.value,
-        due: p_due.value,
-        user: p_user.value
+    projects.querySelector("tbody").innerHTML =
+        data.map(p => `<tr data-id="${p.project_id}"><td>#${p.project_id} | ${p.project_name}</td></tr>`).join("");
+
+    document.querySelectorAll("#projects tbody tr").forEach(row => {
+        row.onclick = () => {
+            document.querySelectorAll("#projects tr").forEach(r => r.classList.remove("selected"));
+            row.classList.add("selected");
+
+            a_project.value = row.dataset.id;
+            loadActions();
+        };
     });
-
-    await fetch(`/projects?${params}`, { method: "POST" });
-    loadProjects();
 }
 
 // ACTIONS
-async function createAction() {
-    if (!validate([a_name,a_priority,a_due,a_desc,a_project])) return;
+async function loadActions() {
+    const data = await (await fetch(`/actions?project_id=${a_project.value}`)).json();
 
-    const params = new URLSearchParams({
-        name: a_name.value,
-        priority: a_priority.value,
-        due: a_due.value,
-        description: a_desc.value,
-        project: a_project.value
+    actions.querySelector("tbody").innerHTML =
+        data.map(a => `<tr data-id="${a.action_id}"><td>#${a.action_id} | ${a.action_name}</td></tr>`).join("");
+
+    document.querySelectorAll("#actions tbody tr").forEach(row => {
+        row.onclick = () => {
+            document.querySelectorAll("#actions tr").forEach(r => r.classList.remove("selected"));
+            row.classList.add("selected");
+
+            s_action.value = row.dataset.id;
+            loadSubactions();
+        };
     });
-
-    await fetch(`/actions?${params}`, { method: "POST" });
-    loadActions();
 }
 
 // SUBACTIONS
-async function createSubaction() {
-    if (!validate([s_name,s_priority,s_due,s_desc,s_action])) return;
+async function loadSubactions() {
+    const data = await (await fetch(`/subactions?action_id=${s_action.value}`)).json();
 
-    const params = new URLSearchParams({
-        name: s_name.value,
-        priority: s_priority.value,
-        due: s_due.value,
-        description: s_desc.value,
-        action: s_action.value
-    });
-
-    await fetch(`/subactions?${params}`, { method: "POST" });
-    loadSubactions();
+    subactions.querySelector("tbody").innerHTML =
+        data.map(s => `<tr><td>#${s.subaction_id} | ${s.subaction_name}</td></tr>`).join("");
 }
 
 </script>
