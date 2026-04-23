@@ -7,10 +7,15 @@ from pjm_datalayer import *
 app = FastAPI()
 
 # --- ROOT (serve UI) ---
+import os
+from fastapi.responses import FileResponse
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 @app.get("/")
 def serve_index():
-    return FileResponse("frontend/index.html")
-
+    file_path = os.path.join(BASE_DIR, "frontend", "index.html")
+    return FileResponse(file_path)
 
 # --- GET ---
 
