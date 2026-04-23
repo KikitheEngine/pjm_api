@@ -2,74 +2,145 @@
 <html>
 <head>
     <title>PJM App</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 { margin-bottom: 20px; }
+
+        .section {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: #2d6cdf;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1f4fbf;
+        }
+
+        ul {
+            padding-left: 15px;
+        }
+    </style>
 </head>
+
 <body>
 
 <h1>PJM Project Manager</h1>
 
 <!-- USERS -->
-<h2>Users</h2>
-<button onclick="loadUsers()">Load Users</button>
-<ul id="users"></ul>
+<div class="section">
+    <h2>Users</h2>
 
-<h3>Create User</h3>
-<input id="user_name" placeholder="Name">
-<input id="user_email" placeholder="Email">
-<button onclick="createUser()">Create</button>
+    <div class="row">
+        <button onclick="loadUsers()">Load</button>
+    </div>
 
-<hr>
+    <ul id="users"></ul>
+
+    <div class="row">
+        <input id="user_name" placeholder="Name">
+        <input id="user_email" placeholder="Email">
+        <button onclick="createUser()">Create</button>
+    </div>
+</div>
 
 <!-- PROJECTS -->
-<h2>Projects</h2>
-<input id="filter_user_id" placeholder="User ID (optional)">
-<button onclick="loadProjects()">Load Projects</button>
-<ul id="projects"></ul>
+<div class="section">
+    <h2>Projects</h2>
 
-<h3>Create Project</h3>
-<input id="p_name" placeholder="Name">
-<input id="p_type" placeholder="Type">
-<input id="p_segment" placeholder="Segment">
-<input id="p_supplier" placeholder="Supplier">
-<input id="p_value" placeholder="Value">
-<input id="p_priority" placeholder="Priority">
-<input id="p_created" placeholder="Created">
-<input id="p_due" placeholder="Due">
-<input id="p_user" placeholder="User ID">
-<button onclick="createProject()">Create</button>
+    <div class="row">
+        <input id="filter_user_id" placeholder="Filter by User ID">
+        <button onclick="loadProjects()">Load</button>
+    </div>
 
-<hr>
+    <ul id="projects"></ul>
+
+    <div class="row">
+        <input id="p_name" placeholder="Project Name">
+        <input id="p_type" placeholder="Type">
+        <input id="p_segment" placeholder="Segment">
+        <input id="p_supplier" placeholder="Supplier">
+        <input id="p_value" placeholder="Value">
+        <input id="p_priority" placeholder="Priority">
+        <input id="p_created" placeholder="Created">
+        <input id="p_due" placeholder="Due">
+        <input id="p_user" placeholder="User ID">
+        <button onclick="createProject()">Create</button>
+    </div>
+</div>
 
 <!-- ACTIONS -->
-<h2>Actions</h2>
-<input id="project_id_actions" placeholder="Project ID">
-<button onclick="loadActions()">Load Actions</button>
-<ul id="actions"></ul>
+<div class="section">
+    <h2>Actions</h2>
 
-<h3>Create Action</h3>
-<input id="a_name" placeholder="Name">
-<input id="a_priority" placeholder="Priority">
-<input id="a_due" placeholder="Due">
-<input id="a_created" placeholder="Created">
-<input id="a_desc" placeholder="Description">
-<input id="a_project" placeholder="Project ID">
-<button onclick="createAction()">Create</button>
+    <div class="row">
+        <input id="project_id_actions" placeholder="Project ID">
+        <button onclick="loadActions()">Load</button>
+    </div>
 
-<hr>
+    <ul id="actions"></ul>
+
+    <div class="row">
+        <input id="a_name" placeholder="Action Name">
+        <input id="a_priority" placeholder="Priority">
+        <input id="a_due" placeholder="Due">
+        <input id="a_created" placeholder="Created">
+        <input id="a_desc" placeholder="Description">
+        <input id="a_project" placeholder="Project ID">
+        <button onclick="createAction()">Create</button>
+    </div>
+</div>
 
 <!-- SUBACTIONS -->
-<h2>Subactions</h2>
-<input id="action_id_sub" placeholder="Action ID">
-<button onclick="loadSubactions()">Load Subactions</button>
-<ul id="subactions"></ul>
+<div class="section">
+    <h2>Subactions</h2>
 
-<h3>Create Subaction</h3>
-<input id="s_name" placeholder="Name">
-<input id="s_desc" placeholder="Description">
-<input id="s_created" placeholder="Created">
-<input id="s_due" placeholder="Due">
-<input id="s_priority" placeholder="Priority">
-<input id="s_action" placeholder="Action ID">
-<button onclick="createSubaction()">Create</button>
+    <div class="row">
+        <input id="action_id_sub" placeholder="Action ID">
+        <button onclick="loadSubactions()">Load</button>
+    </div>
+
+    <ul id="subactions"></ul>
+
+    <div class="row">
+        <input id="s_name" placeholder="Subaction Name">
+        <input id="s_desc" placeholder="Description">
+        <input id="s_created" placeholder="Created">
+        <input id="s_due" placeholder="Due">
+        <input id="s_priority" placeholder="Priority">
+        <input id="s_action" placeholder="Action ID">
+        <button onclick="createSubaction()">Create</button>
+    </div>
+</div>
 
 <script>
 
@@ -78,43 +149,40 @@ async function loadUsers() {
     const res = await fetch("/users");
     const data = await res.json();
 
-    const list = document.getElementById("users");
-    list.innerHTML = "";
-
+    users.innerHTML = "";
     data.forEach(u => {
         const li = document.createElement("li");
-        li.innerText = `${u.user_id} | ${u.user_name} | ${u.user_email}`;
-        list.appendChild(li);
+        li.innerText = `#${u.user_id} | ${u.user_name} | ${u.user_email}`;
+        users.appendChild(li);
     });
 }
 
 async function createUser() {
-    const name = user_name.value;
-    const email = user_email.value;
-
-    const params = new URLSearchParams({ name, email });
+    const params = new URLSearchParams({
+        name: user_name.value,
+        email: user_email.value
+    });
 
     await fetch(`/users?${params}`, { method: "POST" });
     loadUsers();
 }
 
+
 // PROJECTS
 async function loadProjects() {
-    const userId = filter_user_id.value;
-
     let url = "/projects";
-    if (userId) url += `?user_id=${userId}`;
+    if (filter_user_id.value) {
+        url += `?user_id=${filter_user_id.value}`;
+    }
 
     const res = await fetch(url);
     const data = await res.json();
 
-    const list = document.getElementById("projects");
-    list.innerHTML = "";
-
+    projects.innerHTML = "";
     data.forEach(p => {
         const li = document.createElement("li");
-        li.innerText = `${p.project_id} | ${p.project_name}`;
-        list.appendChild(li);
+        li.innerText = `#${p.project_id} | ${p.project_name} (${p.project_priority})`;
+        projects.appendChild(li);
     });
 }
 
@@ -135,20 +203,17 @@ async function createProject() {
     loadProjects();
 }
 
+
 // ACTIONS
 async function loadActions() {
-    const projectId = project_id_actions.value;
-
-    const res = await fetch(`/actions?project_id=${projectId}`);
+    const res = await fetch(`/actions?project_id=${project_id_actions.value}`);
     const data = await res.json();
 
-    const list = document.getElementById("actions");
-    list.innerHTML = "";
-
+    actions.innerHTML = "";
     data.forEach(a => {
         const li = document.createElement("li");
-        li.innerText = `${a.action_id} | ${a.action_name}`;
-        list.appendChild(li);
+        li.innerText = `#${a.action_id} | ${a.action_name}`;
+        actions.appendChild(li);
     });
 }
 
@@ -166,20 +231,17 @@ async function createAction() {
     loadActions();
 }
 
+
 // SUBACTIONS
 async function loadSubactions() {
-    const actionId = action_id_sub.value;
-
-    const res = await fetch(`/subactions?action_id=${actionId}`);
+    const res = await fetch(`/subactions?action_id=${action_id_sub.value}`);
     const data = await res.json();
 
-    const list = document.getElementById("subactions");
-    list.innerHTML = "";
-
+    subactions.innerHTML = "";
     data.forEach(s => {
         const li = document.createElement("li");
-        li.innerText = `${s.subaction_id} | ${s.subaction_name}`;
-        list.appendChild(li);
+        li.innerText = `#${s.subaction_id} | ${s.subaction_name}`;
+        subactions.appendChild(li);
     });
 }
 
@@ -196,6 +258,13 @@ async function createSubaction() {
     await fetch(`/subactions?${params}`, { method: "POST" });
     loadSubactions();
 }
+
+
+// AUTO LOAD
+window.onload = () => {
+    loadUsers();
+    loadProjects();
+};
 
 </script>
 

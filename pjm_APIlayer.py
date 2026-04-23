@@ -88,35 +88,35 @@ def create_user_endpoint(name: str, email: str):
 
 
 @app.post("/projects")
-def create_project_endpoint(name: str, type: str, segment: str, supplier: str, value: int, priority: str, created: str, due: str, user: int):
-    return {"project_id": create_project(name, type, segment, supplier, value, priority, created, due, user)}
+def create_project_endpoint(name: str, type: str, segment: str, supplier: str, value: int, priority: str, due: str, user: int):
+    return {"project_id": create_project(name, type, segment, supplier, value, priority, due, user)}
 
 
 @app.post("/actions")
-def create_action_endpoint(name: str, priority: str, due: str, created: str, description: str, project: int):
-    return {"action_id": create_action(name, priority, due, created, description, project)}
+def create_action_endpoint(name: str, priority: str, due: str, description: str, project: int):
+    return {"action_id": create_action(name, priority, due, description, project)}
 
 
 @app.post("/subactions")
-def create_subaction_endpoint(name: str, description: str, created: str, due: str, priority: str, action: int):
-    return {"subaction_id": create_subaction(name, description, created, due, priority, action)}
+def create_subaction_endpoint(name: str, description: str, due: str, priority: str, action: int):
+    return {"subaction_id": create_subaction(name, description, due, priority, action)}
 
 
 # --- UPDATE ---
 
 @app.put("/projects/{project_id}")
-def update_project_endpoint(project_id: int, name: str, type: str, segment: str, supplier: str, value: int, priority: str, created: str, due: str):
-    return {"rows_updated": update_project(project_id, name, type, segment, supplier, value, priority, created, due)}
+def update_project_endpoint(project_id: int, name: str, type: str, segment: str, supplier: str, value: int, priority: str, due: str):
+    return {"rows_updated": update_project(project_id, name, type, segment, supplier, value, priority, due)}
 
 
 @app.put("/actions/{action_id}")
-def update_action_endpoint(action_id: int, name: str, priority: str, due: str, created: str, description: str):
-    return {"rows_updated": update_action(action_id, name, priority, due, created, description)}
+def update_action_endpoint(action_id: int, name: str, priority: str, due: str, description: str):
+    return {"rows_updated": update_action(action_id, name, priority, due, description)}
 
 
 @app.put("/subactions/{subaction_id}")
-def update_subaction_endpoint(subaction_id: int, name: str, description: str, created: str, due: str, priority: str):
-    return {"rows_updated": update_subaction(subaction_id, name, description, created, due, priority)}
+def update_subaction_endpoint(subaction_id: int, name: str, description: str, due: str, priority: str):
+    return {"rows_updated": update_subaction(subaction_id, name, description, due, priority)}
 
 
 # --- DELETE ---
