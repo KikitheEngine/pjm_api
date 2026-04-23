@@ -94,18 +94,18 @@ def create_user(name, email):
     return row[0] if row else None
 
 
-def create_project(name, type, segment, supplier, value, priority, created, due, user):
+def create_project(name, type, segment, supplier, value, priority, due, user):
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
         INSERT INTO projects (
             project_name, project_type, project_segment, project_supplier, project_value,
-            project_priority, project_create_date, project_due_date, user_id
+            project_priority, project_due_date, user_id
         )
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING project_id
-    """, (name, type, segment, supplier, value, priority, created, due, user))
+    """, (name, type, segment, supplier, value, priority, due, user))
 
     row = cursor.fetchone()
     conn.commit()
@@ -115,18 +115,18 @@ def create_project(name, type, segment, supplier, value, priority, created, due,
     return row[0] if row else None
 
 
-def create_action(name, priority, due, created, description, project):
+def create_action(name, priority, due, description, project):
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
         INSERT INTO actions (
-            action_name, action_priority, action_due_date, action_create_date,
+            action_name, action_priority, action_due_date,
             action_description, project_id
         )
         VALUES (%s, %s, %s, %s, %s, %s)
         RETURNING action_id
-    """, (name, priority, due, created, description, project))
+    """, (name, priority, due, description, project))
 
     row = cursor.fetchone()
     conn.commit()
@@ -136,18 +136,18 @@ def create_action(name, priority, due, created, description, project):
     return row[0] if row else None
 
 
-def create_subaction(name, description, created, due, priority, action):
+def create_subaction(name, description, due, priority, action):
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
         INSERT INTO subactions (
-            subaction_name, subaction_description, subaction_create_date,
+            subaction_name, subaction_description,
             subaction_due_date, subaction_priority, action_id
         )
         VALUES (%s, %s, %s, %s, %s, %s)
         RETURNING subaction_id
-    """, (name, description, created, due, priority, action))
+    """, (name, description, due, priority, action))
 
     row = cursor.fetchone()
     conn.commit()
@@ -159,7 +159,7 @@ def create_subaction(name, description, created, due, priority, action):
 
 # --- UPDATE ---
 
-def update_project(project_id, name, type, segment, supplier, value, priority, created, due):
+def update_project(project_id, name, type, segment, supplier, value, priority, due):
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -172,10 +172,9 @@ def update_project(project_id, name, type, segment, supplier, value, priority, c
             project_supplier = %s,
             project_value = %s,
             project_priority = %s,
-            project_create_date = %s,
             project_due_date = %s
         WHERE project_id = %s
-    """, (name, type, segment, supplier, value, priority, created, due, project_id))
+    """, (name, type, segment, supplier, value, priority, due, project_id))
 
     conn.commit()
     rows_updated = cursor.rowcount
@@ -185,7 +184,7 @@ def update_project(project_id, name, type, segment, supplier, value, priority, c
     return rows_updated
 
 
-def update_action(action_id, name, priority, due, created, description):
+def update_action(action_id, name, priority, due, description):
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -195,10 +194,9 @@ def update_action(action_id, name, priority, due, created, description):
             action_name = %s,
             action_priority = %s,
             action_due_date = %s,
-            action_create_date = %s,
             action_description = %s
         WHERE action_id = %s
-    """, (name, priority, due, created, description, action_id))
+    """, (name, priority, due, description, action_id))
 
     conn.commit()
     rows_updated = cursor.rowcount
@@ -208,7 +206,7 @@ def update_action(action_id, name, priority, due, created, description):
     return rows_updated
 
 
-def update_subaction(subaction_id, name, description, created, due, priority):
+def update_subaction(subaction_id, name, description, due, priority):
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -217,11 +215,10 @@ def update_subaction(subaction_id, name, description, created, due, priority):
         SET
             subaction_name = %s,
             subaction_description = %s,
-            subaction_create_date = %s,
             subaction_due_date = %s,
             subaction_priority = %s
         WHERE subaction_id = %s
-    """, (name, description, created, due, priority, subaction_id))
+    """, (name, description, due, priority, subaction_id))
 
     conn.commit()
     rows_updated = cursor.rowcount

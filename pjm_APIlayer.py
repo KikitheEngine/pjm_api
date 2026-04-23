@@ -136,5 +136,18 @@ def delete_subaction_endpoint(subaction_id: int):
     return {"rows_deleted": delete_subaction(subaction_id)}
 
 
+#COMPLETE
+
+@app.put("/actions/complete/{action_id}")
+def complete_action_endpoint(action_id: int):
+    return {"updated": complete_action(action_id)}
+
+
+@app.put("/subactions/complete/{subaction_id}")
+def complete_subaction_endpoint(subaction_id: int):
+    return {"updated": complete_subaction(subaction_id)}
+
+
 # --- STATIC FILES (optional, for future css/js) ---
+
 app.mount("/static", StaticFiles(directory="frontend"), name="static")

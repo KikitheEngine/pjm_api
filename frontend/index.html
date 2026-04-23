@@ -1,140 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Y.U.K.I</title>
+<title>Y.U.K.I</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
-    <style>
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f5f6f8;
-            margin: 0;
-            padding: 20px;
-            color: #1c1c1e;
-        }
+<style>
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f5f6f8;
+    padding: 20px;
+}
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+.header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
 
-        h1 { font-weight: 400; margin: 0; }
+.logo {
+    height:36px;
+    opacity:.8;
+}
 
-        .subtitle {
-            font-size: 12px;
-            color: #6e6e73;
-        }
+.section {
+    background:white;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:12px;
+}
 
-        .logo {
-            height: 38px;
-            opacity: 0.8;
-        }
+.row { display:flex; gap:6px; flex-wrap:wrap; }
 
-        h2 {
-            font-size: 15px;
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
+input, select {
+    padding:6px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    font-size:12px;
+}
 
-        .layout { display: flex; gap: 20px; }
-        .main { flex: 1; }
-        .sidebar { width: 280px; }
+textarea {
+    width:260px;
+    height:80px;
+    border:1px solid #ddd;
+    border-radius:6px;
+}
 
-        .section {
-            background: white;
-            padding: 12px;
-            margin-bottom: 12px;
-            border-radius: 10px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-        }
+button {
+    background:#007aff;
+    color:white;
+    border:none;
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+}
 
-        .row {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-bottom: 8px;
-        }
+button:hover {
+    background:#005ecb;
+}
 
-        input, select {
-            padding: 6px 8px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 12px;
-            background: #fafafa;
-        }
+table { width:100%; border-collapse:collapse; }
+td { padding:6px; border-bottom:1px solid #eee; }
 
-        textarea {
-            width: 260px;
-            height: 80px;
-            padding: 6px 8px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 12px;
-            background: #fafafa;
-            resize: none;
-        }
+tr:hover { background:#f0f6ff; }
 
-        button {
-            padding: 6px 10px;
-            border: none;
-            border-radius: 6px;
-            background: #007aff;
-            color: white;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        button:hover {
-            background: #005ecb;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-        }
-
-        td {
-            padding: 8px 6px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        tbody tr {
-            cursor: pointer;
-        }
-
-        tbody tr:hover {
-            background: #f0f6ff;
-        }
-
-        .selected {
-            background: #e6f0ff !important;
-        }
-    </style>
+.complete {
+    opacity:0.5;
+    text-decoration: line-through;
+}
+</style>
 </head>
 
 <body>
 
 <div class="header">
-    <div>
-        <h1>Project Management Tool</h1>
-        <div class="subtitle">Y.U.K.I Suite</div>
-    </div>
-
-    <img src="/Logo_Redesign_AF_Logo.png" class="logo">
+<div>
+<h2>Project Management Tool</h2>
+<div>Y.U.K.I Suite</div>
 </div>
 
-<div class="layout">
+<img src="/logo.png" class="logo">
+</div>
 
-<div class="main">
+<div class="row">
+
+<div style="flex:1">
 
 <!-- PROJECTS -->
 <div class="section">
-<h2>Projects</h2>
-
+<h3>Projects</h3>
 <button onclick="loadProjects()">Load</button>
 
 <table id="projects"><tbody></tbody></table>
@@ -143,20 +98,20 @@
 <input id="p_name" placeholder="Name">
 
 <select id="p_type">
-<option value="">-Select Type-</option>
+<option value="">-Select-</option>
 <option>Subk</option><option>IWO</option><option>Quest</option>
 </select>
 
 <select id="p_segment">
-<option value="">-Select Segment-</option>
-<option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+<option value="">-Select-</option>
+<option>1</option><option>2</option><option>3</option>
 </select>
 
-<input id="p_supplier" placeholder="Supplier">
-<input id="p_value" placeholder="Value">
+<input id="p_supplier">
+<input id="p_value">
 
 <select id="p_priority">
-<option value="">-Select Priority-</option>
+<option value="">-Select-</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
 
@@ -169,21 +124,20 @@
 
 <!-- ACTIONS -->
 <div class="section">
-<h2>Actions</h2>
-
+<h3>Actions</h3>
 <table id="actions"><tbody></tbody></table>
 
 <div class="row">
-<input id="a_name" placeholder="Name">
+<input id="a_name">
 
 <select id="a_priority">
-<option value="">-Select Priority-</option>
+<option value="">-Select-</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
 
 <input type="date" id="a_due">
-<textarea id="a_desc" placeholder="Description"></textarea>
-<input id="a_project" placeholder="Project ID">
+<textarea id="a_desc"></textarea>
+<input id="a_project">
 
 <button onclick="createAction()">Create</button>
 </div>
@@ -191,21 +145,20 @@
 
 <!-- SUBACTIONS -->
 <div class="section">
-<h2>Subactions</h2>
-
+<h3>Subactions</h3>
 <table id="subactions"><tbody></tbody></table>
 
 <div class="row">
-<input id="s_name" placeholder="Name">
+<input id="s_name">
 
 <select id="s_priority">
-<option value="">-Select Priority-</option>
+<option value="">-Select-</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
 
 <input type="date" id="s_due">
-<textarea id="s_desc" placeholder="Description"></textarea>
-<input id="s_action" placeholder="Action ID">
+<textarea id="s_desc"></textarea>
+<input id="s_action">
 
 <button onclick="createSubaction()">Create</button>
 </div>
@@ -213,17 +166,10 @@
 
 </div>
 
-<div class="sidebar">
+<div style="width:250px">
 
 <div class="section">
-<h2>Create User</h2>
-<input id="user_name" placeholder="Name">
-<input id="user_email" placeholder="Email">
-<button onclick="createUser()">Add</button>
-</div>
-
-<div class="section">
-<h2>Users</h2>
+<h3>Users</h3>
 <button onclick="loadUsers()">Load</button>
 <table id="users"><tbody></tbody></table>
 </div>
@@ -237,62 +183,90 @@
 // USERS
 async function loadUsers() {
     const data = await (await fetch("/users")).json();
-    users.querySelector("tbody").innerHTML =
-        data.map(u => `<tr data-id="${u.user_id}"><td>#${u.user_id} | ${u.user_name}</td></tr>`).join("");
+    users.innerHTML = data.map(u =>
+        `<tr onclick="selectUser(${u.user_id})"><td>${u.user_name}</td></tr>`
+    ).join("");
+}
 
-    document.querySelectorAll("#users tbody tr").forEach(row => {
-        row.onclick = () => {
-            document.querySelectorAll("#users tr").forEach(r => r.classList.remove("selected"));
-            row.classList.add("selected");
-
-            // AUTO FILL USER ID
-            p_user.value = row.dataset.id;
-        };
-    });
+function selectUser(id){
+    p_user.value = id;
 }
 
 // PROJECTS
 async function loadProjects() {
     const data = await (await fetch("/projects")).json();
 
-    projects.querySelector("tbody").innerHTML =
-        data.map(p => `<tr data-id="${p.project_id}"><td>#${p.project_id} | ${p.project_name}</td></tr>`).join("");
+    projects.innerHTML = data.map(p =>
+        `<tr onclick="selectProject(${p.project_id})">
+            <td>${p.project_name}</td>
+            <td><button onclick="deleteProject(${p.project_id});event.stopPropagation()">X</button></td>
+        </tr>`
+    ).join("");
+}
 
-    document.querySelectorAll("#projects tbody tr").forEach(row => {
-        row.onclick = () => {
-            document.querySelectorAll("#projects tr").forEach(r => r.classList.remove("selected"));
-            row.classList.add("selected");
+function selectProject(id){
+    a_project.value = id;
+    loadActions();
+}
 
-            a_project.value = row.dataset.id;
-            loadActions();
-        };
-    });
+async function deleteProject(id){
+    await fetch(`/projects/${id}`, {method:"DELETE"});
+    loadProjects();
 }
 
 // ACTIONS
 async function loadActions() {
-    const data = await (await fetch(`/actions?project_id=${a_project.value}`)).json();
+    let data = await (await fetch(`/actions?project_id=${a_project.value}`)).json();
 
-    actions.querySelector("tbody").innerHTML =
-        data.map(a => `<tr data-id="${a.action_id}"><td>#${a.action_id} | ${a.action_name}</td></tr>`).join("");
-
-    document.querySelectorAll("#actions tbody tr").forEach(row => {
-        row.onclick = () => {
-            document.querySelectorAll("#actions tr").forEach(r => r.classList.remove("selected"));
-            row.classList.add("selected");
-
-            s_action.value = row.dataset.id;
-            loadSubactions();
-        };
+    data.sort((a,b)=>{
+        if(a.action_status === b.action_status){
+            return new Date(a.action_due_date) - new Date(b.action_due_date);
+        }
+        return a.action_status - b.action_status;
     });
+
+    actions.innerHTML = data.map(a =>
+        `<tr class="${a.action_status ? 'complete':''}" onclick="selectAction(${a.action_id})">
+        <td><input type="checkbox" ${a.action_status ? "checked":""}
+        onclick="completeAction(${a.action_id});event.stopPropagation()"></td>
+        <td>${a.action_name}</td>
+        </tr>`
+    ).join("");
+}
+
+function selectAction(id){
+    s_action.value = id;
+    loadSubactions();
+}
+
+async function completeAction(id){
+    await fetch(`/actions/complete/${id}`, {method:"PUT"});
+    loadActions();
 }
 
 // SUBACTIONS
 async function loadSubactions() {
-    const data = await (await fetch(`/subactions?action_id=${s_action.value}`)).json();
+    let data = await (await fetch(`/subactions?action_id=${s_action.value}`)).json();
 
-    subactions.querySelector("tbody").innerHTML =
-        data.map(s => `<tr><td>#${s.subaction_id} | ${s.subaction_name}</td></tr>`).join("");
+    data.sort((a,b)=>{
+        if(a.subaction_status === b.subaction_status){
+            return new Date(a.subaction_due_date) - new Date(b.subaction_due_date);
+        }
+        return a.subaction_status - b.subaction_status;
+    });
+
+    subactions.innerHTML = data.map(s =>
+        `<tr class="${s.subaction_status ? 'complete':''}">
+        <td><input type="checkbox" ${s.subaction_status ? "checked":""}
+        onclick="completeSubaction(${s.subaction_id})"></td>
+        <td>${s.subaction_name}</td>
+        </tr>`
+    ).join("");
+}
+
+async function completeSubaction(id){
+    await fetch(`/subactions/complete/${id}`, {method:"PUT"});
+    loadSubactions();
 }
 
 </script>
