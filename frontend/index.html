@@ -14,15 +14,23 @@
             color: #1c1c1e;
         }
 
-        h1 {
-            font-weight: 400;
-            margin-bottom: 4px;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
+
+        h1 { font-weight: 400; margin: 0; }
 
         .subtitle {
             font-size: 12px;
             color: #6e6e73;
-            margin-bottom: 20px;
+        }
+
+        .logo {
+            height: 32px;
+            opacity: 0.75;
         }
 
         h2 {
@@ -31,18 +39,9 @@
             margin-bottom: 8px;
         }
 
-        .layout {
-            display: flex;
-            gap: 20px;
-        }
-
-        .main {
-            flex: 1;
-        }
-
-        .sidebar {
-            width: 280px;
-        }
+        .layout { display: flex; gap: 20px; }
+        .main { flex: 1; }
+        .sidebar { width: 280px; }
 
         .section {
             background: white;
@@ -52,12 +51,7 @@
             box-shadow: 0 1px 4px rgba(0,0,0,0.05);
         }
 
-        .row {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-bottom: 8px;
-        }
+        .row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
 
         input, select {
             padding: 6px;
@@ -77,251 +71,229 @@
             font-size: 12px;
         }
 
-        ul {
-            padding-left: 12px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
             font-size: 12px;
+        }
+
+        th {
+            text-align: left;
+            font-weight: 500;
+            color: #6e6e73;
+            padding: 6px;
+            border-bottom: 1px solid #eee;
+        }
+
+        td {
+            padding: 6px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tr {
+            transition: background 0.15s ease;
+            cursor: pointer;
+        }
+
+        tr:hover {
+            background: #f0f6ff;
+        }
+
+        .selected {
+            background: #e6f0ff !important;
         }
     </style>
 </head>
 
 <body>
 
-<h1>Project Management Tool</h1>
-<div class="subtitle">Y.U.K.I Suite</div>
+<div class="header">
+    <div>
+        <h1>Project Management Tool</h1>
+        <div class="subtitle">Y.U.K.I Suite</div>
+    </div>
+
+    <img src="Logo_Redesign_AF_Logo.svg" class="logo">
+</div>
 
 <div class="layout">
 
-    <!-- MAIN -->
-    <div class="main">
+<div class="main">
 
-        <!-- PROJECTS -->
-        <div class="section">
-            <h2>Projects</h2>
+<!-- PROJECTS -->
+<div class="section">
+<h2>Projects</h2>
 
-            <div class="row">
-                <input id="filter_user_id" placeholder="User ID">
-                <button onclick="loadProjects()">Load</button>
-            </div>
+<div class="row">
+<input id="filter_user_id" placeholder="User ID">
+<button onclick="loadProjects()">Load</button>
+</div>
 
-            <ul id="projects"></ul>
+<table id="projects">
+<thead>
+<tr><th>ID</th><th>Name</th><th>Priority</th><th>User</th></tr>
+</thead>
+<tbody></tbody>
+</table>
 
-            <div class="row">
-                <input id="p_name" placeholder="Name">
+<div class="row">
+<input id="p_name" placeholder="Name">
 
-                <select id="p_type">
-                    <option value="">Type</option>
-                    <option>Subk</option>
-                    <option>IWO</option>
-                    <option>Quest</option>
-                </select>
+<select id="p_type">
+<option>Subk</option><option>IWO</option><option>Quest</option>
+</select>
 
-                <select id="p_segment">
-                    <option value="">Segment</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                </select>
+<select id="p_segment">
+<option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+</select>
 
-                <input id="p_supplier" placeholder="Supplier">
-                <input id="p_value" placeholder="Value">
+<input id="p_supplier" placeholder="Supplier">
+<input id="p_value" placeholder="Value">
 
-                <select id="p_priority">
-                    <option value="">Priority</option>
-                    <option>High</option>
-                    <option>Medium</option>
-                    <option>Low</option>
-                </select>
+<select id="p_priority">
+<option>High</option><option>Medium</option><option>Low</option>
+</select>
 
-                <input type="date" id="p_due">
-                <input id="p_user" placeholder="User ID">
+<input type="date" id="p_due">
+<input id="p_user" placeholder="User ID">
 
-                <button onclick="createProject()">Create</button>
-            </div>
-        </div>
+<button onclick="createProject()">Create</button>
+</div>
+</div>
 
-        <!-- ACTIONS -->
-        <div class="section">
-            <h2>Actions</h2>
+<!-- ACTIONS -->
+<div class="section">
+<h2>Actions</h2>
 
-            <div class="row">
-                <input id="project_id_actions" placeholder="Project ID">
-                <button onclick="loadActions()">Load</button>
-            </div>
+<div class="row">
+<input id="project_id_actions" placeholder="Project ID">
+<button onclick="loadActions()">Load</button>
+</div>
 
-            <ul id="actions"></ul>
+<table id="actions">
+<thead>
+<tr><th>ID</th><th>Name</th><th>Priority</th></tr>
+</thead>
+<tbody></tbody>
+</table>
 
-            <div class="row">
-                <input id="a_name" placeholder="Name">
+<div class="row">
+<input id="a_name" placeholder="Name">
 
-                <select id="a_priority">
-                    <option value="">Priority</option>
-                    <option>High</option>
-                    <option>Medium</option>
-                    <option>Low</option>
-                </select>
+<select id="a_priority">
+<option>High</option><option>Medium</option><option>Low</option>
+</select>
 
-                <input type="date" id="a_due">
-                <input id="a_desc" placeholder="Description">
-                <input id="a_project" placeholder="Project ID">
+<input type="date" id="a_due">
+<input id="a_desc" placeholder="Description">
+<input id="a_project" placeholder="Project ID">
 
-                <button onclick="createAction()">Create</button>
-            </div>
-        </div>
+<button onclick="createAction()">Create</button>
+</div>
+</div>
 
-        <!-- SUBACTIONS -->
-        <div class="section">
-            <h2>Subactions</h2>
+<!-- SUBACTIONS -->
+<div class="section">
+<h2>Subactions</h2>
 
-            <div class="row">
-                <input id="action_id_sub" placeholder="Action ID">
-                <button onclick="loadSubactions()">Load</button>
-            </div>
+<div class="row">
+<input id="action_id_sub" placeholder="Action ID">
+<button onclick="loadSubactions()">Load</button>
+</div>
 
-            <ul id="subactions"></ul>
+<table id="subactions">
+<thead>
+<tr><th>ID</th><th>Name</th><th>Priority</th></tr>
+</thead>
+<tbody></tbody>
+</table>
 
-            <div class="row">
-                <input id="s_name" placeholder="Name">
+<div class="row">
+<input id="s_name" placeholder="Name">
 
-                <select id="s_priority">
-                    <option value="">Priority</option>
-                    <option>High</option>
-                    <option>Medium</option>
-                    <option>Low</option>
-                </select>
+<select id="s_priority">
+<option>High</option><option>Medium</option><option>Low</option>
+</select>
 
-                <input type="date" id="s_due">
-                <input id="s_desc" placeholder="Description">
-                <input id="s_action" placeholder="Action ID">
+<input type="date" id="s_due">
+<input id="s_desc" placeholder="Description">
+<input id="s_action" placeholder="Action ID">
 
-                <button onclick="createSubaction()">Create</button>
-            </div>
-        </div>
+<button onclick="createSubaction()">Create</button>
+</div>
+</div>
 
-    </div>
+</div>
 
-    <!-- SIDEBAR USERS -->
-    <div class="sidebar">
+<div class="sidebar">
 
-        <div class="section">
-            <h2>Create User</h2>
-            <div class="row">
-                <input id="user_name" placeholder="Name">
-                <input id="user_email" placeholder="Email">
-            </div>
-            <button onclick="createUser()">Add</button>
-        </div>
+<div class="section">
+<h2>Create User</h2>
+<input id="user_name" placeholder="Name">
+<input id="user_email" placeholder="Email">
+<button onclick="createUser()">Add</button>
+</div>
 
-        <div class="section">
-            <h2>Users</h2>
-            <button onclick="loadUsers()">Load</button>
-            <ul id="users"></ul>
-        </div>
+<div class="section">
+<h2>Users</h2>
+<button onclick="loadUsers()">Load</button>
 
-    </div>
+<table id="users">
+<thead><tr><th>ID</th><th>Name</th></tr></thead>
+<tbody></tbody>
+</table>
+
+</div>
+
+</div>
 
 </div>
 
 <script>
 
+function handleRowSelection(tableId) {
+    const table = document.getElementById(tableId);
+    table.querySelectorAll("tbody tr").forEach(row => {
+        row.onclick = () => {
+            table.querySelectorAll("tr").forEach(r => r.classList.remove("selected"));
+            row.classList.add("selected");
+        };
+    });
+}
+
 // USERS
 async function loadUsers() {
-    const res = await fetch("/users");
-    const data = await res.json();
-    users.innerHTML = "";
-    data.forEach(u => {
-        users.innerHTML += `<li>#${u.user_id} | ${u.user_name}</li>`;
-    });
+    const data = await (await fetch("/users")).json();
+    users.querySelector("tbody").innerHTML =
+        data.map(u => `<tr><td>${u.user_id}</td><td>${u.user_name}</td></tr>`).join("");
+    handleRowSelection("users");
 }
-
-async function createUser() {
-    const params = new URLSearchParams({
-        name: user_name.value,
-        email: user_email.value
-    });
-    await fetch(`/users?${params}`, { method: "POST" });
-}
-
 
 // PROJECTS
 async function loadProjects() {
     let url = "/projects";
     if (filter_user_id.value) url += `?user_id=${filter_user_id.value}`;
+    const data = await (await fetch(url)).json();
 
-    const res = await fetch(url);
-    const data = await res.json();
-
-    projects.innerHTML = "";
-    data.forEach(p => {
-        projects.innerHTML += `<li>#${p.project_id} | ${p.project_name}</li>`;
-    });
+    projects.querySelector("tbody").innerHTML =
+        data.map(p => `<tr><td>${p.project_id}</td><td>${p.project_name}</td><td>${p.project_priority}</td><td>${p.user_id}</td></tr>`).join("");
+    handleRowSelection("projects");
 }
-
-async function createProject() {
-    const params = new URLSearchParams({
-        name: p_name.value,
-        type: p_type.value,
-        segment: p_segment.value,
-        supplier: p_supplier.value,
-        value: p_value.value,
-        priority: p_priority.value,
-        due: p_due.value,
-        user: p_user.value
-    });
-
-    await fetch(`/projects?${params}`, { method: "POST" });
-    loadProjects();
-}
-
 
 // ACTIONS
 async function loadActions() {
-    const res = await fetch(`/actions?project_id=${project_id_actions.value}`);
-    const data = await res.json();
-
-    actions.innerHTML = "";
-    data.forEach(a => {
-        actions.innerHTML += `<li>#${a.action_id} | ${a.action_name}</li>`;
-    });
+    const data = await (await fetch(`/actions?project_id=${project_id_actions.value}`)).json();
+    actions.querySelector("tbody").innerHTML =
+        data.map(a => `<tr><td>${a.action_id}</td><td>${a.action_name}</td><td>${a.action_priority}</td></tr>`).join("");
+    handleRowSelection("actions");
 }
-
-async function createAction() {
-    const params = new URLSearchParams({
-        name: a_name.value,
-        priority: a_priority.value,
-        due: a_due.value,
-        description: a_desc.value,
-        project: a_project.value
-    });
-
-    await fetch(`/actions?${params}`, { method: "POST" });
-    loadActions();
-}
-
 
 // SUBACTIONS
 async function loadSubactions() {
-    const res = await fetch(`/subactions?action_id=${action_id_sub.value}`);
-    const data = await res.json();
-
-    subactions.innerHTML = "";
-    data.forEach(s => {
-        subactions.innerHTML += `<li>#${s.subaction_id} | ${s.subaction_name}</li>`;
-    });
-}
-
-async function createSubaction() {
-    const params = new URLSearchParams({
-        name: s_name.value,
-        priority: s_priority.value,
-        due: s_due.value,
-        description: s_desc.value,
-        action: s_action.value
-    });
-
-    await fetch(`/subactions?${params}`, { method: "POST" });
-    loadSubactions();
+    const data = await (await fetch(`/subactions?action_id=${action_id_sub.value}`)).json();
+    subactions.querySelector("tbody").innerHTML =
+        data.map(s => `<tr><td>${s.subaction_id}</td><td>${s.subaction_name}</td><td>${s.subaction_priority}</td></tr>`).join("");
+    handleRowSelection("subactions");
 }
 
 </script>
