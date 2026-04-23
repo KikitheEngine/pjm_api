@@ -3,7 +3,7 @@
 <head>
 <title>Y.U.K.I</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
 body {
@@ -12,6 +12,7 @@ body {
     padding:20px;
 }
 
+/* HEADER */
 .header {
     display:flex;
     justify-content:space-between;
@@ -19,16 +20,24 @@ body {
     margin-bottom:20px;
 }
 
-h2 {
-    font-weight:300;
+h1 {
+    font-weight:400;
+    font-size:20px;
     margin:0;
 }
 
+.subtitle {
+    font-size:12px;
+    color:#777;
+}
+
+/* LOGO */
 .logo {
     height:34px;
     opacity:.8;
 }
 
+/* SECTIONS */
 .section {
     background:white;
     padding:12px;
@@ -36,19 +45,28 @@ h2 {
     margin-bottom:12px;
 }
 
+h3 {
+    font-weight:500;
+    font-size:14px;
+    margin-bottom:10px;
+}
+
+/* INPUT GRID (KEY FIX) */
 .row {
-    display:flex;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap:6px;
-    flex-wrap:wrap;
     margin-bottom:8px;
 }
 
+/* INPUTS */
 input, select {
     height:30px;
     padding:4px 6px;
     border:1px solid #ddd;
     border-radius:6px;
     font-size:12px;
+    width:100%;
 }
 
 textarea {
@@ -57,10 +75,10 @@ textarea {
     border:1px solid #ddd;
     border-radius:6px;
     font-size:12px;
-    resize:none;
-    width:180px;
+    width:100%;
 }
 
+/* BUTTON */
 button {
     background:#007aff;
     color:white;
@@ -74,6 +92,7 @@ button:hover {
     background:#005ecb;
 }
 
+/* TABLE */
 table {
     width:100%;
     border-collapse:collapse;
@@ -92,6 +111,15 @@ tr:hover {
     opacity:.5;
     text-decoration:line-through;
 }
+
+.layout {
+    display:flex;
+    gap:20px;
+}
+
+.sidebar {
+    width:260px;
+}
 </style>
 </head>
 
@@ -99,14 +127,14 @@ tr:hover {
 
 <div class="header">
 <div>
-<h2>Project Management Tool</h2>
-<div style="font-size:12px;color:#777;">Y.U.K.I Suite</div>
+<h1>Project Management Tool</h1>
+<div class="subtitle">Y.U.K.I Suite</div>
 </div>
 
-<img src="/logo.png" class="logo">
+<img src="/static/logo.png" class="logo">
 </div>
 
-<div style="display:flex; gap:20px;">
+<div class="layout">
 
 <div style="flex:1">
 
@@ -120,28 +148,13 @@ tr:hover {
 
 <div class="row">
 <input id="p_name" placeholder="Project Name">
-
-<select id="p_type">
-<option value="">Type</option>
-<option>Subk</option><option>IWO</option><option>Quest</option>
-</select>
-
-<select id="p_segment">
-<option value="">Segment</option>
-<option>1</option><option>2</option><option>3</option>
-</select>
-
+<select id="p_type"><option value="">Type</option><option>Subk</option><option>IWO</option><option>Quest</option></select>
+<select id="p_segment"><option value="">Segment</option><option>1</option><option>2</option><option>3</option></select>
 <input id="p_supplier" placeholder="Supplier">
 <input id="p_value" placeholder="Value">
-
-<select id="p_priority">
-<option value="">Priority</option>
-<option>High</option><option>Medium</option><option>Low</option>
-</select>
-
+<select id="p_priority"><option value="">Priority</option><option>High</option><option>Medium</option><option>Low</option></select>
 <input type="date" id="p_due">
 <input id="p_user" placeholder="User ID">
-
 <button onclick="createProject()">Create</button>
 </div>
 </div>
@@ -154,16 +167,10 @@ tr:hover {
 
 <div class="row">
 <input id="a_name" placeholder="Action Name">
-
-<select id="a_priority">
-<option value="">Priority</option>
-<option>High</option><option>Medium</option><option>Low</option>
-</select>
-
+<select id="a_priority"><option value="">Priority</option><option>High</option><option>Medium</option><option>Low</option></select>
 <input type="date" id="a_due">
 <textarea id="a_desc" placeholder="Description"></textarea>
 <input id="a_project" placeholder="Project ID">
-
 <button onclick="createAction()">Create</button>
 </div>
 </div>
@@ -176,23 +183,17 @@ tr:hover {
 
 <div class="row">
 <input id="s_name" placeholder="Subaction Name">
-
-<select id="s_priority">
-<option value="">Priority</option>
-<option>High</option><option>Medium</option><option>Low</option>
-</select>
-
+<select id="s_priority"><option value="">Priority</option><option>High</option><option>Medium</option><option>Low</option></select>
 <input type="date" id="s_due">
 <textarea id="s_desc" placeholder="Description"></textarea>
 <input id="s_action" placeholder="Action ID">
-
 <button onclick="createSubaction()">Create</button>
 </div>
 </div>
 
 </div>
 
-<div style="width:250px">
+<div class="sidebar">
 
 <div class="section">
 <h3>Users</h3>
@@ -234,15 +235,10 @@ async function deleteProject(id){
 async function loadActions() {
     let data = await (await fetch(`/actions?project_id=${a_project.value}`)).json();
 
-    data.sort((a,b)=>{
-        if(a.action_status === b.action_status){
-            return new Date(a.action_due_date) - new Date(b.action_due_date);
-        }
-        return a.action_status - b.action_status;
-    });
+    data.sort((a,b)=> a.action_status - b.action_status || new Date(a.action_due_date)-new Date(b.action_due_date));
 
     actions.innerHTML = data.map(a =>
-        `<tr class="${a.action_status ? 'complete':''}" onclick="s_action.value=${a.action_id};loadSubactions()">
+        `<tr class="${a.action_status?'complete':''}" onclick="s_action.value=${a.action_id};loadSubactions()">
         <td><input type="checkbox" ${a.action_status?"checked":""}
         onclick="completeAction(${a.action_id});event.stopPropagation()"></td>
         <td>${a.action_name}</td>
@@ -259,15 +255,10 @@ async function completeAction(id){
 async function loadSubactions() {
     let data = await (await fetch(`/subactions?action_id=${s_action.value}`)).json();
 
-    data.sort((a,b)=>{
-        if(a.subaction_status === b.subaction_status){
-            return new Date(a.subaction_due_date) - new Date(b.subaction_due_date);
-        }
-        return a.subaction_status - b.subaction_status;
-    });
+    data.sort((a,b)=> a.subaction_status - b.subaction_status || new Date(a.subaction_due_date)-new Date(b.subaction_due_date));
 
     subactions.innerHTML = data.map(s =>
-        `<tr class="${s.subaction_status ? 'complete':''}">
+        `<tr class="${s.subaction_status?'complete':''}">
         <td><input type="checkbox" ${s.subaction_status?"checked":""}
         onclick="completeSubaction(${s.subaction_id})"></td>
         <td>${s.subaction_name}</td>

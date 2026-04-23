@@ -6,6 +6,10 @@ from pjm_datalayer import *
 
 app = FastAPI()
 
+from fastapi.staticfiles import StaticFiles
+
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
 # --- ROOT (serve UI) ---
 import os
 from fastapi.responses import HTMLResponse
