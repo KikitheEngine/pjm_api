@@ -1,515 +1,350 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YUKI Project Manager</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<title>YUKI PM</title>
 
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f5f6f8;
-      color: #222;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f4f6f8;
+}
 
-    .page {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 20px 24px 28px 24px;
-    }
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  padding: 10px 18px;
+}
 
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-    }
+.header img {
+  height: 40px;
+  margin-right: 8px;
+  margin-left: -6px;
+}
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      position: relative;
-      left: -6px;
-    }
+.header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
 
-    .brand img {
-      height: 42px;
-      width: auto;
-      display: block;
-    }
+/* GRID */
+.container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 12px 18px 18px;
+}
 
-    .brand h1 {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: 0.2px;
-    }
+/* PANELS */
+.panel {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #d9dee7;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      gap: 16px;
-      align-items: start;
-    }
+.panel h2 {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
 
-    .panel {
-      background: white;
-      border: 1px solid #d8dde6;
-      border-radius: 10px;
-      padding: 12px;
-      min-height: 560px;
-      display: flex;
-      flex-direction: column;
-    }
+/* CONTROLS */
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 8px;
+}
 
-    .panel h2 {
-      margin: 0 0 10px 0;
-      font-size: 16px;
-      font-weight: 600;
-    }
+.controls input,
+.controls textarea {
+  padding: 6px;
+  font-size: 12px;
+  border: 1px solid #c9cfda;
+  border-radius: 6px;
+}
 
-    .controls {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
+.controls textarea {
+  grid-column: span 2;
+  height: 50px;
+}
 
-    input, select, textarea, button {
-      font: inherit;
-    }
+.controls button {
+  grid-column: span 2;
+  height: 28px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #1f4ea3;
+  color: white;
+  cursor: pointer;
+}
 
-    input, select, textarea {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid #c9cfda;
-      border-radius: 8px;
-      background: #fff;
-      font-size: 13px;
-    }
+.controls button.secondary {
+  background: #6b7280;
+}
 
-    textarea {
-      min-height: 72px;
-      resize: vertical;
-    }
+/* LIST */
+.list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
-    button {
-      height: 34px;
-      border: none;
-      border-radius: 8px;
-      padding: 0 12px;
-      background: #1f4ea3;
-      color: white;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+/* ITEM */
+.item {
+  border: 1px solid #d8dde6;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  background: #fafbfc;
+  cursor: pointer;
+}
 
-    button:hover {
-      opacity: 0.94;
-    }
+.item:hover {
+  background: #eef3ff;
+}
 
-    .secondary {
-      background: #6b7280;
-    }
+.item.active {
+  background: #e6edff;
+  border-color: #1f4ea3;
+}
 
-    .list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      overflow-y: auto;
-      padding-right: 2px;
-    }
+.item.gray {
+  opacity: 0.5;
+}
 
-    .item {
-      border: 1px solid #d8dde6;
-      border-radius: 8px;
-      padding: 9px 10px;
-      background: #fafbfc;
-      cursor: pointer;
-      transition: background 0.15s ease, border 0.15s ease;
-      font-size: 13px;
-    }
+/* SUBACTION */
+.sub {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
 
-    .item:hover {
-      background: #f0f4fa;
-    }
-
-    .item.active {
-      border: 1px solid #1f4ea3;
-      background: #eaf1ff;
-    }
-
-    .item.gray-out {
-      opacity: 0.55;
-      background: #eceff3;
-    }
-
-    .item-title {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 3px;
-    }
-
-    .item-sub {
-      font-size: 12px;
-      color: #555;
-    }
-
-    .row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .row > * {
-      flex: 1;
-    }
-
-    .tiny-btn {
-      height: 30px;
-      font-size: 12px;
-      padding: 0 10px;
-    }
-
-    .subaction-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .subaction-left {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      flex: 1;
-    }
-
-    .subaction-left input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      margin-top: 2px;
-      flex: 0 0 auto;
-    }
-
-    .muted {
-      color: #666;
-      font-size: 12px;
-    }
-
-    .small-text {
-      font-size: 12px;
-    }
-
-    @media (max-width: 1150px) {
-      .grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+.sub input {
+  margin-top: 2px;
+}
+</style>
 </head>
+
 <body>
-  <div class="page">
-    <div class="topbar">
-      <div class="brand">
-        <img src="/static/Logo.png" alt="Logo" onerror="this.style.display='none'" />
-        <h1>YUKI Project Manager</h1>
-      </div>
-    </div>
 
-    <div class="grid">
-      <!-- USERS -->
-      <section class="panel">
-        <h2>Users</h2>
+<div class="header">
+  <img src="/static/Logo.png">
+  <h1>YUKI Project Manager</h1>
+</div>
 
-        <div class="controls">
-          <input id="userName" type="text" placeholder="User name" />
-          <input id="userEmail" type="text" placeholder="User email" />
-          <button onclick="createUser()">Create User</button>
-          <button class="secondary" onclick="loadUsers()">Load Users</button>
-        </div>
+<div class="container">
 
-        <div id="usersList" class="list"></div>
-      </section>
+<!-- USERS -->
+<div class="panel">
+  <h2>Users</h2>
 
-      <!-- PROJECTS -->
-      <section class="panel">
-        <h2>Projects</h2>
-
-        <div class="controls">
-          <input id="projectName" type="text" placeholder="Project name" />
-          <input id="projectType" type="text" placeholder="Type (Quest, etc.)" />
-          <input id="projectSegment" type="text" placeholder="Segment" />
-          <input id="projectSupplier" type="text" placeholder="Supplier" />
-          <input id="projectValue" type="text" placeholder="Value" />
-          <input id="projectPriority" type="text" placeholder="Priority" />
-          <input id="projectCreated" type="text" placeholder="Created date" />
-          <input id="projectDue" type="text" placeholder="Due date" />
-          <input id="projectUser" type="text" placeholder="User ID" />
-          <button onclick="createProject()">Create Project</button>
-          <button class="secondary" onclick="loadProjects()">Load Projects</button>
-        </div>
-
-        <div id="projectsList" class="list"></div>
-      </section>
-
-      <!-- ACTIONS -->
-      <section class="panel">
-        <h2>Actions</h2>
-
-        <div class="controls">
-          <input id="actionName" type="text" placeholder="Action name" />
-          <input id="actionPriority" type="text" placeholder="Priority" />
-          <input id="actionDue" type="text" placeholder="Due date" />
-          <input id="actionCreated" type="text" placeholder="Created date" />
-          <textarea id="actionDescription" placeholder="Description"></textarea>
-          <button onclick="createAction()">Create Action</button>
-          <button class="secondary" onclick="loadActions()">Load Actions</button>
-        </div>
-
-        <div id="actionsList" class="list"></div>
-      </section>
-
-      <!-- SUBACTIONS -->
-      <section class="panel">
-        <h2>Subactions</h2>
-
-        <div class="controls">
-          <input id="subactionName" type="text" placeholder="Subaction name" />
-          <textarea id="subactionDescription" placeholder="Description"></textarea>
-          <input id="subactionDue" type="text" placeholder="Due date" />
-          <input id="subactionPriority" type="text" placeholder="Priority" />
-
-          <div class="row small-text">
-            <label style="display:flex;align-items:center;gap:8px;">
-              <input id="subactionStatus" type="checkbox" style="width:16px;height:16px;" />
-              Mark complete
-            </label>
-          </div>
-
-          <button onclick="createSubaction()">Create Subaction</button>
-          <button class="secondary" onclick="loadSubactions()">Load Subactions</button>
-        </div>
-
-        <div id="subactionsList" class="list"></div>
-      </section>
-    </div>
+  <div class="controls">
+    <input id="userName" placeholder="Name">
+    <input id="userEmail" placeholder="Email">
+    <button onclick="createUser()">Create</button>
+    <button class="secondary" onclick="loadUsers()">Load</button>
   </div>
 
-  <script>
-    const API_BASE = "http://127.0.0.1:8000";
+  <div id="users" class="list"></div>
+</div>
 
-    let selectedProjectId = null;
-    let selectedActionId = null;
+<!-- PROJECTS -->
+<div class="panel">
+  <h2>Projects</h2>
 
-    // ---------------- USERS ----------------
-    async function loadUsers() {
-      const res = await fetch(`${API_BASE}/users`);
-      const data = await res.json();
+  <div class="controls">
+    <input id="pName" placeholder="Name">
+    <input id="pType" placeholder="Type">
+    <button onclick="createProject()">Create</button>
+    <button class="secondary" onclick="loadProjects()">Load</button>
+  </div>
 
-      const list = document.getElementById("usersList");
-      list.innerHTML = "";
+  <div id="projects" class="list"></div>
+</div>
 
-      data.forEach(user => {
-        const div = document.createElement("div");
-        div.className = "item";
-        div.innerHTML = `
-          <div class="item-title">${user.user_name ?? user.name ?? "Unnamed User"}</div>
-          <div class="item-sub">${user.user_email ?? user.email ?? ""}</div>
-        `;
-        list.appendChild(div);
-      });
-    }
+<!-- ACTIONS -->
+<div class="panel">
+  <h2>Actions</h2>
 
-    async function createUser() {
-      const name = document.getElementById("userName").value;
-      const email = document.getElementById("userEmail").value;
+  <div class="controls">
+    <input id="aName" placeholder="Name">
+    <input id="aPriority" placeholder="Priority">
+    <textarea id="aDesc" placeholder="Description"></textarea>
+    <button onclick="createAction()">Create</button>
+    <button class="secondary" onclick="loadActions()">Load</button>
+  </div>
 
-      await fetch(`${API_BASE}/users?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`, {
-        method: "POST"
-      });
+  <div id="actions" class="list"></div>
+</div>
 
-      loadUsers();
-    }
+<!-- SUBACTIONS -->
+<div class="panel">
+  <h2>Subactions</h2>
 
-    // ---------------- PROJECTS ----------------
-    async function loadProjects() {
-      const res = await fetch(`${API_BASE}/projects`);
-      const data = await res.json();
+  <div class="controls">
+    <input id="sName" placeholder="Name">
+    <input id="sPriority" placeholder="Priority">
+    <textarea id="sDesc" placeholder="Description"></textarea>
 
-      const list = document.getElementById("projectsList");
-      list.innerHTML = "";
+    <label style="font-size:12px;">
+      <input type="checkbox" id="sStatus"> Complete
+    </label>
 
-      data.forEach(project => {
-        const projectId = project.project_id ?? project.id;
-        const div = document.createElement("div");
-        div.className = "item";
-        div.innerHTML = `
-          <div class="item-title">${project.project_name ?? project.name ?? "Unnamed Project"}</div>
-          <div class="item-sub">${project.project_type ?? project.type ?? ""}</div>
-        `;
+    <button onclick="createSub()">Create</button>
+    <button class="secondary" onclick="loadSubs()">Load</button>
+  </div>
 
-        div.onclick = async () => {
-          selectedProjectId = projectId;
-          selectedActionId = null;
+  <div id="subs" class="list"></div>
+</div>
 
-          document.querySelectorAll("#projectsList .item").forEach(x => x.classList.remove("active"));
-          div.classList.add("active");
+</div>
 
-          await loadActions();
-          document.getElementById("subactionsList").innerHTML = "";
-        };
+<script>
+const API = "http://127.0.0.1:8000";
 
-        list.appendChild(div);
-      });
-    }
+let proj = null;
+let act = null;
 
-    async function createProject() {
-      const name = document.getElementById("projectName").value;
-      const type = document.getElementById("projectType").value;
-      const segment = document.getElementById("projectSegment").value;
-      const supplier = document.getElementById("projectSupplier").value;
-      const value = document.getElementById("projectValue").value;
-      const priority = document.getElementById("projectPriority").value;
-      const created = document.getElementById("projectCreated").value;
-      const due = document.getElementById("projectDue").value;
-      const user = document.getElementById("projectUser").value;
+/* USERS */
+async function loadUsers() {
+  let r = await fetch(API + "/users");
+  let d = await r.json();
+  let el = document.getElementById("users");
+  el.innerHTML = "";
 
-      const url = `${API_BASE}/projects?name=${encodeURIComponent(name)}&type=${encodeURIComponent(type)}&segment=${encodeURIComponent(segment)}&supplier=${encodeURIComponent(supplier)}&value=${encodeURIComponent(value)}&priority=${encodeURIComponent(priority)}&created=${encodeURIComponent(created)}&due=${encodeURIComponent(due)}&user=${encodeURIComponent(user)}`;
+  d.forEach(x => {
+    let div = document.createElement("div");
+    div.className = "item";
+    div.innerText = x.name;
+    el.appendChild(div);
+  });
+}
 
-      await fetch(url, { method: "POST" });
-      loadProjects();
-    }
+async function createUser() {
+  let n = userName.value;
+  let e = userEmail.value;
+  await fetch(`${API}/users?name=${n}&email=${e}`, {method:"POST"});
+  loadUsers();
+}
 
-    // ---------------- ACTIONS ----------------
-    async function loadActions() {
-      const list = document.getElementById("actionsList");
-      list.innerHTML = "";
+/* PROJECTS */
+async function loadProjects() {
+  let r = await fetch(API + "/projects");
+  let d = await r.json();
+  let el = document.getElementById("projects");
+  el.innerHTML = "";
 
-      if (!selectedProjectId) return;
+  d.forEach(x => {
+    let div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `<b>${x.name}</b><br>${x.type}`;
 
-      const res = await fetch(`${API_BASE}/actions?project_id=${selectedProjectId}`);
-      const data = await res.json();
-
-      data.forEach(action => {
-        const actionId = action.action_id ?? action.id;
-        const div = document.createElement("div");
-        div.className = "item";
-        div.innerHTML = `
-          <div class="item-title">${action.action_name ?? action.name ?? "Unnamed Action"}</div>
-          <div class="item-sub">
-            ${action.action_priority ?? action.priority ?? ""}
-            ${action.action_due_date || action.due_date ? " | Due: " + (action.action_due_date ?? action.due_date) : ""}
-          </div>
-        `;
-
-        div.onclick = async () => {
-          selectedActionId = actionId;
-
-          document.querySelectorAll("#actionsList .item").forEach(x => x.classList.remove("active"));
-          div.classList.add("active");
-
-          await loadSubactions();
-        };
-
-        list.appendChild(div);
-      });
-    }
-
-    async function createAction() {
-      if (!selectedProjectId) {
-        alert("Select a project first.");
-        return;
-      }
-
-      const name = document.getElementById("actionName").value;
-      const priority = document.getElementById("actionPriority").value;
-      const due = document.getElementById("actionDue").value;
-      const created = document.getElementById("actionCreated").value;
-      const description = document.getElementById("actionDescription").value;
-
-      const url = `${API_BASE}/actions?name=${encodeURIComponent(name)}&priority=${encodeURIComponent(priority)}&due=${encodeURIComponent(due)}&created=${encodeURIComponent(created)}&description=${encodeURIComponent(description)}&project=${selectedProjectId}`;
-
-      await fetch(url, { method: "POST" });
+    div.onclick = () => {
+      proj = x.id;
+      act = null;
+      document.querySelectorAll("#projects .item").forEach(i=>i.classList.remove("active"));
+      div.classList.add("active");
       loadActions();
-    }
+    };
 
-    // ---------------- SUBACTIONS ----------------
-    async function loadSubactions() {
-      const list = document.getElementById("subactionsList");
-      list.innerHTML = "";
+    el.appendChild(div);
+  });
+}
 
-      if (!selectedActionId) return;
+async function createProject() {
+  let n = pName.value;
+  let t = pType.value;
+  await fetch(`${API}/projects?name=${n}&type=${t}`, {method:"POST"});
+  loadProjects();
+}
 
-      const res = await fetch(`${API_BASE}/subactions?action_id=${selectedActionId}`);
-      const data = await res.json();
+/* ACTIONS */
+async function loadActions() {
+  if (!proj) return;
 
-      data.forEach(sub => {
-        const subId = sub.subaction_id ?? sub.id;
-        const status = sub.status === true;
+  let r = await fetch(`${API}/actions?project_id=${proj}`);
+  let d = await r.json();
+  let el = document.getElementById("actions");
+  el.innerHTML = "";
 
-        const div = document.createElement("div");
-        div.className = `item ${status ? "gray-out" : ""}`;
+  d.forEach(x => {
+    let div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `<b>${x.name}</b><br>${x.priority}`;
 
-        div.innerHTML = `
-          <div class="subaction-row">
-            <div class="subaction-left">
-              <input type="checkbox" ${status ? "checked" : ""} onchange="toggleSubactionStatus(${subId}, this.checked)" />
-              <div>
-                <div class="item-title">${sub.subaction_name ?? sub.name ?? "Unnamed Subaction"}</div>
-                <div class="item-sub">${sub.subaction_priority ?? sub.priority ?? ""}</div>
-                <div class="muted">${sub.subaction_description ?? sub.description ?? ""}</div>
-              </div>
-            </div>
-          </div>
-        `;
+    div.onclick = () => {
+      act = x.id;
+      document.querySelectorAll("#actions .item").forEach(i=>i.classList.remove("active"));
+      div.classList.add("active");
+      loadSubs();
+    };
 
-        list.appendChild(div);
-      });
-    }
+    el.appendChild(div);
+  });
+}
 
-    async function createSubaction() {
-      if (!selectedActionId) {
-        alert("Select an action first.");
-        return;
-      }
+async function createAction() {
+  if (!proj) return alert("select project");
 
-      const name = document.getElementById("subactionName").value;
-      const description = document.getElementById("subactionDescription").value;
-      const due = document.getElementById("subactionDue").value;
-      const priority = document.getElementById("subactionPriority").value;
-      const status = document.getElementById("subactionStatus").checked;
+  await fetch(`${API}/actions?name=${aName.value}&priority=${aPriority.value}&description=${aDesc.value}&project=${proj}`, {method:"POST"});
+  loadActions();
+}
 
-      const url = `${API_BASE}/subactions?name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}&due=${encodeURIComponent(due)}&priority=${encodeURIComponent(priority)}&action=${selectedActionId}&status=${status}`;
+/* SUBACTIONS */
+async function loadSubs() {
+  if (!act) return;
 
-      await fetch(url, { method: "POST" });
-      loadSubactions();
-    }
+  let r = await fetch(`${API}/subactions?action_id=${act}`);
+  let d = await r.json();
+  let el = document.getElementById("subs");
+  el.innerHTML = "";
 
-    async function toggleSubactionStatus(subactionId, status) {
-      // assumes you made an update endpoint for status
-      await fetch(`${API_BASE}/subactions/${subactionId}/status?status=${status}`, {
-        method: "PUT"
-      });
+  d.forEach(x => {
+    let div = document.createElement("div");
+    div.className = "item " + (x.status ? "gray" : "");
 
-      loadSubactions();
-    }
+    div.innerHTML = `
+      <div class="sub">
+        <input type="checkbox" ${x.status ? "checked":""}
+          onchange="toggle(${x.id}, this.checked)">
+        <div>
+          <b>${x.name}</b><br>
+          ${x.priority}
+        </div>
+      </div>
+    `;
 
-    // initial load
-    loadUsers();
-    loadProjects();
-  </script>
+    el.appendChild(div);
+  });
+}
+
+async function createSub() {
+  if (!act) return alert("select action");
+
+  await fetch(`${API}/subactions?name=${sName.value}&description=${sDesc.value}&priority=${sPriority.value}&action=${act}&status=${sStatus.checked}`, {method:"POST"});
+  loadSubs();
+}
+
+async function toggle(id, status) {
+  await fetch(`${API}/subactions/${id}/status?status=${status}`, {method:"PUT"});
+  loadSubs();
+}
+
+/* INIT */
+loadUsers();
+loadProjects();
+</script>
+
 </body>
 </html>
