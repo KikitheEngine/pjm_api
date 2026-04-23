@@ -8,14 +8,21 @@ app = FastAPI()
 
 # --- ROOT (serve UI) ---
 import os
-from fastapi.responses import FileResponse
+from fastapi.responses import JSONResponse
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 @app.get("/")
-def serve_index():
-    file_path = os.path.join(BASE_DIR, "frontend", "index.html")
-    return FileResponse(file_path)
+def debug_root():
+    try:
+        return {
+            "base_dir": BASE_DIR,
+            "files_in_base": os.listdir(BASE_DIR),
+            "frontend_exists": os.path.exists(os.path.join(BASE_DIR, "frontend")),
+            "index_exists": os.path.exists(os.path.join(BASE_DIR, "frontend", "index.html"))
+        }
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)})
 
 # --- GET ---
 
