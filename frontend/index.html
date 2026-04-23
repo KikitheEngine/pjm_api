@@ -21,7 +21,10 @@
             margin-bottom: 20px;
         }
 
-        h1 { font-weight: 400; margin: 0; }
+        h1 {
+            font-weight: 400;
+            margin: 0;
+        }
 
         .subtitle {
             font-size: 12px;
@@ -29,19 +32,29 @@
         }
 
         .logo {
-            height: 32px;
-            opacity: 0.75;
+            height: 40px;
+            opacity: 0.8;
+            object-fit: contain;
         }
 
         h2 {
             font-size: 15px;
-            font-weight: 400;
-            margin-bottom: 8px;
+            font-weight: 500;
+            margin-bottom: 10px;
         }
 
-        .layout { display: flex; gap: 20px; }
-        .main { flex: 1; }
-        .sidebar { width: 280px; }
+        .layout {
+            display: flex;
+            gap: 20px;
+        }
+
+        .main {
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 280px;
+        }
 
         .section {
             background: white;
@@ -51,14 +64,26 @@
             box-shadow: 0 1px 4px rgba(0,0,0,0.05);
         }
 
-        .row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+        .row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
 
-        input, select {
-            padding: 6px;
+        input, select, textarea {
+            padding: 6px 8px;
             border: 1px solid #e0e0e0;
             border-radius: 6px;
             font-size: 12px;
             background: #fafafa;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-width: 220px;
+            min-height: 70px;
+            resize: vertical;
         }
 
         button {
@@ -69,6 +94,12 @@
             color: white;
             cursor: pointer;
             font-size: 12px;
+            transition: background 0.18s ease, transform 0.12s ease;
+        }
+
+        button:hover {
+            background: #005ecb;
+            transform: translateY(-1px);
         }
 
         table {
@@ -77,25 +108,17 @@
             font-size: 12px;
         }
 
-        th {
-            text-align: left;
-            font-weight: 500;
-            color: #6e6e73;
-            padding: 6px;
-            border-bottom: 1px solid #eee;
-        }
-
         td {
-            padding: 6px;
+            padding: 8px 6px;
             border-bottom: 1px solid #f0f0f0;
         }
 
-        tr {
+        tbody tr {
             transition: background 0.15s ease;
             cursor: pointer;
         }
 
-        tr:hover {
+        tbody tr:hover {
             background: #f0f6ff;
         }
 
@@ -113,7 +136,8 @@
         <div class="subtitle">Y.U.K.I Suite</div>
     </div>
 
-    <img src="Logo_Redesign_AF_Logo.svg" class="logo">
+    <!-- PNG LOGO -->
+    <img src="Logo_Redesign_AF_Logo.png" class="logo">
 </div>
 
 <div class="layout">
@@ -129,21 +153,18 @@
 <button onclick="loadProjects()">Load</button>
 </div>
 
-<table id="projects">
-<thead>
-<tr><th>ID</th><th>Name</th><th>Priority</th><th>User</th></tr>
-</thead>
-<tbody></tbody>
-</table>
+<table id="projects"><tbody></tbody></table>
 
 <div class="row">
 <input id="p_name" placeholder="Name">
 
 <select id="p_type">
+<option value="">-Select Type-</option>
 <option>Subk</option><option>IWO</option><option>Quest</option>
 </select>
 
 <select id="p_segment">
+<option value="">-Select Segment-</option>
 <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
 </select>
 
@@ -151,6 +172,7 @@
 <input id="p_value" placeholder="Value">
 
 <select id="p_priority">
+<option value="">-Select Priority-</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
 
@@ -170,22 +192,18 @@
 <button onclick="loadActions()">Load</button>
 </div>
 
-<table id="actions">
-<thead>
-<tr><th>ID</th><th>Name</th><th>Priority</th></tr>
-</thead>
-<tbody></tbody>
-</table>
+<table id="actions"><tbody></tbody></table>
 
 <div class="row">
 <input id="a_name" placeholder="Name">
 
 <select id="a_priority">
+<option value="">-Select Priority-</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
 
 <input type="date" id="a_due">
-<input id="a_desc" placeholder="Description">
+<textarea id="a_desc" placeholder="Description"></textarea>
 <input id="a_project" placeholder="Project ID">
 
 <button onclick="createAction()">Create</button>
@@ -201,22 +219,18 @@
 <button onclick="loadSubactions()">Load</button>
 </div>
 
-<table id="subactions">
-<thead>
-<tr><th>ID</th><th>Name</th><th>Priority</th></tr>
-</thead>
-<tbody></tbody>
-</table>
+<table id="subactions"><tbody></tbody></table>
 
 <div class="row">
 <input id="s_name" placeholder="Name">
 
 <select id="s_priority">
+<option value="">-Select Priority-</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
 
 <input type="date" id="s_due">
-<input id="s_desc" placeholder="Description">
+<textarea id="s_desc" placeholder="Description"></textarea>
 <input id="s_action" placeholder="Action ID">
 
 <button onclick="createSubaction()">Create</button>
@@ -237,12 +251,7 @@
 <div class="section">
 <h2>Users</h2>
 <button onclick="loadUsers()">Load</button>
-
-<table id="users">
-<thead><tr><th>ID</th><th>Name</th></tr></thead>
-<tbody></tbody>
-</table>
-
+<table id="users"><tbody></tbody></table>
 </div>
 
 </div>
@@ -255,45 +264,91 @@ function handleRowSelection(tableId) {
     const table = document.getElementById(tableId);
     table.querySelectorAll("tbody tr").forEach(row => {
         row.onclick = () => {
-            table.querySelectorAll("tr").forEach(r => r.classList.remove("selected"));
+            table.querySelectorAll("tbody tr").forEach(r => r.classList.remove("selected"));
             row.classList.add("selected");
         };
     });
 }
 
-// USERS
 async function loadUsers() {
     const data = await (await fetch("/users")).json();
     users.querySelector("tbody").innerHTML =
-        data.map(u => `<tr><td>${u.user_id}</td><td>${u.user_name}</td></tr>`).join("");
+        data.map(u => `<tr><td>#${u.user_id} | ${u.user_name}</td></tr>`).join("");
     handleRowSelection("users");
 }
 
-// PROJECTS
+async function createUser() {
+    const params = new URLSearchParams({
+        name: user_name.value,
+        email: user_email.value
+    });
+    await fetch(`/users?${params}`, { method: "POST" });
+}
+
 async function loadProjects() {
     let url = "/projects";
     if (filter_user_id.value) url += `?user_id=${filter_user_id.value}`;
-    const data = await (await fetch(url)).json();
 
+    const data = await (await fetch(url)).json();
     projects.querySelector("tbody").innerHTML =
-        data.map(p => `<tr><td>${p.project_id}</td><td>${p.project_name}</td><td>${p.project_priority}</td><td>${p.user_id}</td></tr>`).join("");
+        data.map(p => `<tr><td>#${p.project_id} | ${p.project_name} | ${p.project_priority} | User ${p.user_id}</td></tr>`).join("");
     handleRowSelection("projects");
 }
 
-// ACTIONS
+async function createProject() {
+    const params = new URLSearchParams({
+        name: p_name.value,
+        type: p_type.value,
+        segment: p_segment.value,
+        supplier: p_supplier.value,
+        value: p_value.value,
+        priority: p_priority.value,
+        due: p_due.value,
+        user: p_user.value
+    });
+
+    await fetch(`/projects?${params}`, { method: "POST" });
+    loadProjects();
+}
+
 async function loadActions() {
     const data = await (await fetch(`/actions?project_id=${project_id_actions.value}`)).json();
     actions.querySelector("tbody").innerHTML =
-        data.map(a => `<tr><td>${a.action_id}</td><td>${a.action_name}</td><td>${a.action_priority}</td></tr>`).join("");
+        data.map(a => `<tr><td>#${a.action_id} | ${a.action_name} | ${a.action_priority}</td></tr>`).join("");
     handleRowSelection("actions");
 }
 
-// SUBACTIONS
+async function createAction() {
+    const params = new URLSearchParams({
+        name: a_name.value,
+        priority: a_priority.value,
+        due: a_due.value,
+        description: a_desc.value,
+        project: a_project.value
+    });
+
+    await fetch(`/actions?${params}`, { method: "POST" });
+    loadActions();
+}
+
 async function loadSubactions() {
     const data = await (await fetch(`/subactions?action_id=${action_id_sub.value}`)).json();
     subactions.querySelector("tbody").innerHTML =
-        data.map(s => `<tr><td>${s.subaction_id}</td><td>${s.subaction_name}</td><td>${s.subaction_priority}</td></tr>`).join("");
+        data.map(s => `<tr><td>#${s.subaction_id} | ${s.subaction_name} | ${s.subaction_priority}</td></tr>`).join("");
     handleRowSelection("subactions");
+}
+
+async function createSubaction() {
+    const params = new URLSearchParams({
+        name: s_name.value,
+        priority: s_priority.value,
+        due: s_due.value,
+        description: s_desc.value,
+        action: s_action.value
+    });
+
+    await fetch(`/subactions?${params}`, { method: "POST" });
+    loadSubactions();
 }
 
 </script>
