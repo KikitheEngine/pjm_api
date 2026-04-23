@@ -1,9 +1,16 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from pjm_datalayer import *
 
 app = FastAPI()
+
+# --- ROOT (serve UI) ---
+@app.get("/")
+def serve_index():
+    return FileResponse("frontend/index.html")
+
 
 # --- GET ---
 
@@ -123,6 +130,5 @@ def delete_subaction_endpoint(subaction_id: int):
     return {"rows_deleted": delete_subaction(subaction_id)}
 
 
-# --- FRONTEND (MUST BE LAST) ---
-
-app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
+# --- STATIC FILES (optional, for future css/js) ---
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
