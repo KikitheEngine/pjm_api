@@ -1,16 +1,19 @@
 import psycopg2
+import os
+
 
 def get_connection():
     return psycopg2.connect(
         host="dpg-d7kjaeosfn5c73dg0gb0-a.oregon-postgres.render.com",
         database="projectmanagement_ckmw",
         user="projectmanagement_ckmw_user",
-        password="YOUR_PASSWORD",
+        password=os.getenv("DB_PASSWORD"),
         port=5432,
         sslmode="require"
     )
 
-# GET
+
+# --- GET ---
 
 def get_user():
     conn = get_connection()
@@ -24,11 +27,15 @@ def get_user():
     return rows
 
 
-def get_project():
+def get_project(user_id=None):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM projects")
+    if user_id:
+        cursor.execute("SELECT * FROM projects WHERE user_id = %s", (user_id,))
+    else:
+        cursor.execute("SELECT * FROM projects")
+
     rows = cursor.fetchall()
 
     cursor.close()
@@ -36,11 +43,15 @@ def get_project():
     return rows
 
 
-def get_action():
+def get_action(project_id=None):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM actions")
+    if project_id:
+        cursor.execute("SELECT * FROM actions WHERE project_id = %s", (project_id,))
+    else:
+        cursor.execute("SELECT * FROM actions")
+
     rows = cursor.fetchall()
 
     cursor.close()
@@ -48,11 +59,15 @@ def get_action():
     return rows
 
 
-def get_subaction():
+def get_subaction(action_id=None):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM subactions")
+    if action_id:
+        cursor.execute("SELECT * FROM subactions WHERE action_id = %s", (action_id,))
+    else:
+        cursor.execute("SELECT * FROM subactions")
+
     rows = cursor.fetchall()
 
     cursor.close()
@@ -60,7 +75,7 @@ def get_subaction():
     return rows
 
 
-# CREATE
+# --- CREATE ---
 
 def create_user(name, email):
     conn = get_connection()
@@ -79,7 +94,7 @@ def create_user(name, email):
     return row[0] if row else None
 
 
-def create_project(name, type, segment, supplier, value, priority, created, due, user_id):
+def create_project(name, type, segment, supplier, value, priority, created, due, user):
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -90,7 +105,7 @@ def create_project(name, type, segment, supplier, value, priority, created, due,
         )
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING project_id
-    """, (name, type, segment, supplier, value, priority, created, due, user_id))
+    """, (name, type, segment, supplier, value, priority, created, due, user))
 
     row = cursor.fetchone()
     conn.commit()
@@ -100,7 +115,7 @@ def create_project(name, type, segment, supplier, value, priority, created, due,
     return row[0] if row else None
 
 
-def create_action(name, priority, due, created, description, project_id):
+def create_action(name, priority, due, created, description, project):
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -111,7 +126,7 @@ def create_action(name, priority, due, created, description, project_id):
         )
         VALUES (%s, %s, %s, %s, %s, %s)
         RETURNING action_id
-    """, (name, priority, due, created, description, project_id))
+    """, (name, priority, due, created, description, project))
 
     row = cursor.fetchone()
     conn.commit()
@@ -121,7 +136,7 @@ def create_action(name, priority, due, created, description, project_id):
     return row[0] if row else None
 
 
-def create_subaction(name, description, created, due, priority, action_id):
+def create_subaction(name, description, created, due, priority, action):
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -132,7 +147,7 @@ def create_subaction(name, description, created, due, priority, action_id):
         )
         VALUES (%s, %s, %s, %s, %s, %s)
         RETURNING subaction_id
-    """, (name, description, created, due, priority, action_id))
+    """, (name, description, created, due, priority, action))
 
     row = cursor.fetchone()
     conn.commit()
@@ -142,7 +157,7 @@ def create_subaction(name, description, created, due, priority, action_id):
     return row[0] if row else None
 
 
-# UPDATE
+# --- UPDATE ---
 
 def update_project(project_id, name, type, segment, supplier, value, priority, created, due):
     conn = get_connection()
@@ -216,7 +231,7 @@ def update_subaction(subaction_id, name, description, created, due, priority):
     return rows_updated
 
 
-# DELETE
+# --- DELETE ---
 
 def delete_project(project_id):
     conn = get_connection()

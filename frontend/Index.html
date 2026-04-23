@@ -73,11 +73,9 @@
 
 <script>
 
-const BASE_URL = "https://pjm-api.onrender.com";
-
 // USERS
 async function loadUsers() {
-    const res = await fetch(`${BASE_URL}/users`);
+    const res = await fetch("/users");
     const data = await res.json();
 
     const list = document.getElementById("users");
@@ -91,21 +89,20 @@ async function loadUsers() {
 }
 
 async function createUser() {
-    const name = document.getElementById("user_name").value;
-    const email = document.getElementById("user_email").value;
+    const name = user_name.value;
+    const email = user_email.value;
 
-    await fetch(`${BASE_URL}/users?name=${name}&email=${email}`, {
-        method: "POST"
-    });
+    const params = new URLSearchParams({ name, email });
 
+    await fetch(`/users?${params}`, { method: "POST" });
     loadUsers();
 }
 
 // PROJECTS
 async function loadProjects() {
-    const userId = document.getElementById("filter_user_id").value;
+    const userId = filter_user_id.value;
 
-    let url = `${BASE_URL}/projects`;
+    let url = "/projects";
     if (userId) url += `?user_id=${userId}`;
 
     const res = await fetch(url);
@@ -134,15 +131,15 @@ async function createProject() {
         user: p_user.value
     });
 
-    await fetch(`${BASE_URL}/projects?${params}`, { method: "POST" });
+    await fetch(`/projects?${params}`, { method: "POST" });
     loadProjects();
 }
 
 // ACTIONS
 async function loadActions() {
-    const projectId = document.getElementById("project_id_actions").value;
+    const projectId = project_id_actions.value;
 
-    const res = await fetch(`${BASE_URL}/actions?project_id=${projectId}`);
+    const res = await fetch(`/actions?project_id=${projectId}`);
     const data = await res.json();
 
     const list = document.getElementById("actions");
@@ -165,15 +162,15 @@ async function createAction() {
         project: a_project.value
     });
 
-    await fetch(`${BASE_URL}/actions?${params}`, { method: "POST" });
+    await fetch(`/actions?${params}`, { method: "POST" });
     loadActions();
 }
 
 // SUBACTIONS
 async function loadSubactions() {
-    const actionId = document.getElementById("action_id_sub").value;
+    const actionId = action_id_sub.value;
 
-    const res = await fetch(`${BASE_URL}/subactions?action_id=${actionId}`);
+    const res = await fetch(`/subactions?action_id=${actionId}`);
     const data = await res.json();
 
     const list = document.getElementById("subactions");
@@ -196,7 +193,7 @@ async function createSubaction() {
         action: s_action.value
     });
 
-    await fetch(`${BASE_URL}/subactions?${params}`, { method: "POST" });
+    await fetch(`/subactions?${params}`, { method: "POST" });
     loadSubactions();
 }
 

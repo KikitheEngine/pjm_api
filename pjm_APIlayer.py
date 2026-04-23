@@ -1,17 +1,9 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from pjm_datalayer import *
 
 app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # --- GET ---
 
@@ -22,8 +14,8 @@ def get_user_endpoint():
 
 
 @app.get("/projects")
-def get_projects_endpoint():
-    rows = get_project()
+def get_projects_endpoint(user_id: int | None = None):
+    rows = get_project(user_id)
     return [
         {
             "project_id": r[0],
@@ -42,8 +34,8 @@ def get_projects_endpoint():
 
 
 @app.get("/actions")
-def get_action_endpoint():
-    rows = get_action()
+def get_action_endpoint(project_id: int | None = None):
+    rows = get_action(project_id)
     return [
         {
             "action_id": r[0],
@@ -59,8 +51,8 @@ def get_action_endpoint():
 
 
 @app.get("/subactions")
-def get_subaction_endpoint():
-    rows = get_subaction()
+def get_subaction_endpoint(action_id: int | None = None):
+    rows = get_subaction(action_id)
     return [
         {
             "subaction_id": r[0],
@@ -83,18 +75,18 @@ def create_user_endpoint(name: str, email: str):
 
 
 @app.post("/projects")
-def create_project_endpoint(name: str, type: str, segment: str, supplier: str, value: int, priority: str, created: str, due: str, user_id: int):
-    return {"project_id": create_project(name, type, segment, supplier, value, priority, created, due, user_id)}
+def create_project_endpoint(name: str, type: str, segment: str, supplier: str, value: int, priority: str, created: str, due: str, user: int):
+    return {"project_id": create_project(name, type, segment, supplier, value, priority, created, due, user)}
 
 
 @app.post("/actions")
-def create_action_endpoint(name: str, priority: str, due: str, created: str, description: str, project_id: int):
-    return {"action_id": create_action(name, priority, due, created, description, project_id)}
+def create_action_endpoint(name: str, priority: str, due: str, created: str, description: str, project: int):
+    return {"action_id": create_action(name, priority, due, created, description, project)}
 
 
 @app.post("/subactions")
-def create_subaction_endpoint(name: str, description: str, created: str, due: str, priority: str, action_id: int):
-    return {"subaction_id": create_subaction(name, description, created, due, priority, action_id)}
+def create_subaction_endpoint(name: str, description: str, created: str, due: str, priority: str, action: int):
+    return {"subaction_id": create_subaction(name, description, created, due, priority, action)}
 
 
 # --- UPDATE ---
@@ -129,3 +121,8 @@ def delete_action_endpoint(action_id: int):
 @app.delete("/subactions/{subaction_id}")
 def delete_subaction_endpoint(subaction_id: int):
     return {"rows_deleted": delete_subaction(subaction_id)}
+
+
+# --- FRONTEND (MUST BE LAST) ---
+
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
