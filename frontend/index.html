@@ -1,76 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PJM App</title>
+    <title>Y.U.K.I</title>
+
+    <!-- Modern font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <style>
         body {
-            font-family: Arial;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #f5f6f8;
             margin: 0;
             padding: 20px;
+            color: #1c1c1e;
         }
 
-        h1 { margin-bottom: 20px; }
+        h1 {
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #6e6e73;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
 
         .section {
             background: white;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
         }
 
         .row {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         input {
-            padding: 8px;
-            border: 1px solid #ccc;
+            padding: 6px 8px;
+            border: 1px solid #e0e0e0;
             border-radius: 6px;
+            font-size: 12px;
+            background: #fafafa;
         }
 
         button {
-            padding: 8px 12px;
+            padding: 6px 10px;
             border: none;
             border-radius: 6px;
-            background: #2d6cdf;
+            background: #007aff;
             color: white;
             cursor: pointer;
+            font-size: 12px;
         }
 
         button:hover {
-            background: #1f4fbf;
+            background: #0063d1;
         }
 
         ul {
             padding-left: 15px;
+            font-size: 13px;
+        }
+
+        .compact {
+            max-width: 400px;
         }
     </style>
 </head>
 
 <body>
 
-<h1>PJM Project Manager</h1>
+<h1>Project Management Tool</h1>
+<div class="subtitle">Y.U.K.I Suite</div>
+
+<!-- CREATE USER (SMALL) -->
+<div class="section compact">
+    <h2>Create User</h2>
+    <div class="row">
+        <input id="user_name" placeholder="Name">
+        <input id="user_email" placeholder="Email">
+        <button onclick="createUser()">Add</button>
+    </div>
+</div>
 
 <!-- USERS -->
 <div class="section">
     <h2>Users</h2>
-
-    <div class="row">
-        <button onclick="loadUsers()">Load</button>
-    </div>
-
+    <button onclick="loadUsers()">Load Users</button>
     <ul id="users"></ul>
-
-    <div class="row">
-        <input id="user_name" placeholder="Name">
-        <input id="user_email" placeholder="Email">
-        <button onclick="createUser()">Create</button>
-    </div>
 </div>
 
 <!-- PROJECTS -->
@@ -91,7 +120,6 @@
         <input id="p_supplier" placeholder="Supplier">
         <input id="p_value" placeholder="Value">
         <input id="p_priority" placeholder="Priority">
-        <input id="p_created" placeholder="Created">
         <input id="p_due" placeholder="Due">
         <input id="p_user" placeholder="User ID">
         <button onclick="createProject()">Create</button>
@@ -113,7 +141,6 @@
         <input id="a_name" placeholder="Action Name">
         <input id="a_priority" placeholder="Priority">
         <input id="a_due" placeholder="Due">
-        <input id="a_created" placeholder="Created">
         <input id="a_desc" placeholder="Description">
         <input id="a_project" placeholder="Project ID">
         <button onclick="createAction()">Create</button>
@@ -134,7 +161,6 @@
     <div class="row">
         <input id="s_name" placeholder="Subaction Name">
         <input id="s_desc" placeholder="Description">
-        <input id="s_created" placeholder="Created">
         <input id="s_due" placeholder="Due">
         <input id="s_priority" placeholder="Priority">
         <input id="s_action" placeholder="Action ID">
@@ -152,7 +178,7 @@ async function loadUsers() {
     users.innerHTML = "";
     data.forEach(u => {
         const li = document.createElement("li");
-        li.innerText = `#${u.user_id} | ${u.user_name} | ${u.user_email}`;
+        li.innerText = `#${u.user_id} | ${u.user_name}`;
         users.appendChild(li);
     });
 }
@@ -164,7 +190,6 @@ async function createUser() {
     });
 
     await fetch(`/users?${params}`, { method: "POST" });
-    loadUsers();
 }
 
 
@@ -181,7 +206,7 @@ async function loadProjects() {
     projects.innerHTML = "";
     data.forEach(p => {
         const li = document.createElement("li");
-        li.innerText = `#${p.project_id} | ${p.project_name} (${p.project_priority})`;
+        li.innerText = `#${p.project_id} | ${p.project_name}`;
         projects.appendChild(li);
     });
 }
@@ -194,7 +219,6 @@ async function createProject() {
         supplier: p_supplier.value,
         value: p_value.value,
         priority: p_priority.value,
-        created: p_created.value,
         due: p_due.value,
         user: p_user.value
     });
@@ -222,7 +246,6 @@ async function createAction() {
         name: a_name.value,
         priority: a_priority.value,
         due: a_due.value,
-        created: a_created.value,
         description: a_desc.value,
         project: a_project.value
     });
@@ -249,7 +272,6 @@ async function createSubaction() {
     const params = new URLSearchParams({
         name: s_name.value,
         description: s_desc.value,
-        created: s_created.value,
         due: s_due.value,
         priority: s_priority.value,
         action: s_action.value
@@ -258,13 +280,6 @@ async function createSubaction() {
     await fetch(`/subactions?${params}`, { method: "POST" });
     loadSubactions();
 }
-
-
-// AUTO LOAD
-window.onload = () => {
-    loadUsers();
-    loadProjects();
-};
 
 </script>
 
