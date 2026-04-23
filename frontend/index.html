@@ -3,13 +3,13 @@
 <head>
 <title>Y.U.K.I</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
 body {
     font-family: 'Inter', sans-serif;
-    background: #f5f6f8;
-    padding: 20px;
+    background:#f5f6f8;
+    padding:20px;
 }
 
 .header {
@@ -19,8 +19,13 @@ body {
     margin-bottom:20px;
 }
 
+h2 {
+    font-weight:300;
+    margin:0;
+}
+
 .logo {
-    height:36px;
+    height:34px;
     opacity:.8;
 }
 
@@ -31,20 +36,29 @@ body {
     margin-bottom:12px;
 }
 
-.row { display:flex; gap:6px; flex-wrap:wrap; }
+.row {
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-bottom:8px;
+}
 
 input, select {
-    padding:6px;
+    height:30px;
+    padding:4px 6px;
     border:1px solid #ddd;
     border-radius:6px;
     font-size:12px;
 }
 
 textarea {
-    width:260px;
-    height:80px;
+    height:30px;
+    padding:4px 6px;
     border:1px solid #ddd;
     border-radius:6px;
+    font-size:12px;
+    resize:none;
+    width:180px;
 }
 
 button {
@@ -60,14 +74,23 @@ button:hover {
     background:#005ecb;
 }
 
-table { width:100%; border-collapse:collapse; }
-td { padding:6px; border-bottom:1px solid #eee; }
+table {
+    width:100%;
+    border-collapse:collapse;
+}
 
-tr:hover { background:#f0f6ff; }
+td {
+    padding:6px;
+    border-bottom:1px solid #eee;
+}
+
+tr:hover {
+    background:#f0f6ff;
+}
 
 .complete {
-    opacity:0.5;
-    text-decoration: line-through;
+    opacity:.5;
+    text-decoration:line-through;
 }
 </style>
 </head>
@@ -77,41 +100,42 @@ tr:hover { background:#f0f6ff; }
 <div class="header">
 <div>
 <h2>Project Management Tool</h2>
-<div>Y.U.K.I Suite</div>
+<div style="font-size:12px;color:#777;">Y.U.K.I Suite</div>
 </div>
 
 <img src="/logo.png" class="logo">
 </div>
 
-<div class="row">
+<div style="display:flex; gap:20px;">
 
 <div style="flex:1">
 
 <!-- PROJECTS -->
 <div class="section">
 <h3>Projects</h3>
+
 <button onclick="loadProjects()">Load</button>
 
 <table id="projects"><tbody></tbody></table>
 
 <div class="row">
-<input id="p_name" placeholder="Name">
+<input id="p_name" placeholder="Project Name">
 
 <select id="p_type">
-<option value="">-Select-</option>
+<option value="">Type</option>
 <option>Subk</option><option>IWO</option><option>Quest</option>
 </select>
 
 <select id="p_segment">
-<option value="">-Select-</option>
+<option value="">Segment</option>
 <option>1</option><option>2</option><option>3</option>
 </select>
 
-<input id="p_supplier">
-<input id="p_value">
+<input id="p_supplier" placeholder="Supplier">
+<input id="p_value" placeholder="Value">
 
 <select id="p_priority">
-<option value="">-Select-</option>
+<option value="">Priority</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
 
@@ -125,19 +149,20 @@ tr:hover { background:#f0f6ff; }
 <!-- ACTIONS -->
 <div class="section">
 <h3>Actions</h3>
+
 <table id="actions"><tbody></tbody></table>
 
 <div class="row">
-<input id="a_name">
+<input id="a_name" placeholder="Action Name">
 
 <select id="a_priority">
-<option value="">-Select-</option>
+<option value="">Priority</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
 
 <input type="date" id="a_due">
-<textarea id="a_desc"></textarea>
-<input id="a_project">
+<textarea id="a_desc" placeholder="Description"></textarea>
+<input id="a_project" placeholder="Project ID">
 
 <button onclick="createAction()">Create</button>
 </div>
@@ -146,19 +171,20 @@ tr:hover { background:#f0f6ff; }
 <!-- SUBACTIONS -->
 <div class="section">
 <h3>Subactions</h3>
+
 <table id="subactions"><tbody></tbody></table>
 
 <div class="row">
-<input id="s_name">
+<input id="s_name" placeholder="Subaction Name">
 
 <select id="s_priority">
-<option value="">-Select-</option>
+<option value="">Priority</option>
 <option>High</option><option>Medium</option><option>Low</option>
 </select>
 
 <input type="date" id="s_due">
-<textarea id="s_desc"></textarea>
-<input id="s_action">
+<textarea id="s_desc" placeholder="Description"></textarea>
+<input id="s_action" placeholder="Action ID">
 
 <button onclick="createSubaction()">Create</button>
 </div>
@@ -184,29 +210,19 @@ tr:hover { background:#f0f6ff; }
 async function loadUsers() {
     const data = await (await fetch("/users")).json();
     users.innerHTML = data.map(u =>
-        `<tr onclick="selectUser(${u.user_id})"><td>${u.user_name}</td></tr>`
+        `<tr onclick="p_user.value=${u.user_id}"><td>${u.user_name}</td></tr>`
     ).join("");
-}
-
-function selectUser(id){
-    p_user.value = id;
 }
 
 // PROJECTS
 async function loadProjects() {
     const data = await (await fetch("/projects")).json();
-
     projects.innerHTML = data.map(p =>
-        `<tr onclick="selectProject(${p.project_id})">
-            <td>${p.project_name}</td>
-            <td><button onclick="deleteProject(${p.project_id});event.stopPropagation()">X</button></td>
+        `<tr onclick="a_project.value=${p.project_id};loadActions()">
+        <td>${p.project_name}</td>
+        <td><button onclick="deleteProject(${p.project_id});event.stopPropagation()">X</button></td>
         </tr>`
     ).join("");
-}
-
-function selectProject(id){
-    a_project.value = id;
-    loadActions();
 }
 
 async function deleteProject(id){
@@ -226,17 +242,12 @@ async function loadActions() {
     });
 
     actions.innerHTML = data.map(a =>
-        `<tr class="${a.action_status ? 'complete':''}" onclick="selectAction(${a.action_id})">
-        <td><input type="checkbox" ${a.action_status ? "checked":""}
+        `<tr class="${a.action_status ? 'complete':''}" onclick="s_action.value=${a.action_id};loadSubactions()">
+        <td><input type="checkbox" ${a.action_status?"checked":""}
         onclick="completeAction(${a.action_id});event.stopPropagation()"></td>
         <td>${a.action_name}</td>
         </tr>`
     ).join("");
-}
-
-function selectAction(id){
-    s_action.value = id;
-    loadSubactions();
 }
 
 async function completeAction(id){
@@ -257,7 +268,7 @@ async function loadSubactions() {
 
     subactions.innerHTML = data.map(s =>
         `<tr class="${s.subaction_status ? 'complete':''}">
-        <td><input type="checkbox" ${s.subaction_status ? "checked":""}
+        <td><input type="checkbox" ${s.subaction_status?"checked":""}
         onclick="completeSubaction(${s.subaction_id})"></td>
         <td>${s.subaction_name}</td>
         </tr>`
