@@ -62,6 +62,7 @@ def get_action_endpoint(project_id: int | None = None):
             "action_create_date": str(r[4]),
             "action_description": r[5],
             "project_id": r[6],
+            "action_status": r[7]
         }
         for r in rows
     ]
@@ -79,6 +80,7 @@ def get_subaction_endpoint(action_id: int | None = None):
             "subaction_due_date": str(r[4]),
             "subaction_priority": r[5],
             "action_id": r[6],
+            "subaction_status": r[7]
         }
         for r in rows
     ]
@@ -97,13 +99,13 @@ def create_project_endpoint(name: str, type: str, segment: str, supplier: str, v
 
 
 @app.post("/actions")
-def create_action_endpoint(name: str, priority: str, due: str, description: str, project: int):
-    return {"action_id": create_action(name, priority, due, description, project)}
+def create_action_endpoint(name: str, priority: str, due: str, description: str, project: int, status: bool):
+    return {"action_id": create_action(name, priority, due, description, project, status)}
 
 
 @app.post("/subactions")
-def create_subaction_endpoint(name: str, description: str, due: str, priority: str, action: int):
-    return {"subaction_id": create_subaction(name, description, due, priority, action)}
+def create_subaction_endpoint(name: str, description: str, due: str, priority: str, action: int, status: bool):
+    return {"subaction_id": create_subaction(name, description, due, priority, action, status)}
 
 
 # --- UPDATE ---
@@ -114,13 +116,13 @@ def update_project_endpoint(project_id: int, name: str, type: str, segment: str,
 
 
 @app.put("/actions/{action_id}")
-def update_action_endpoint(action_id: int, name: str, priority: str, due: str, description: str):
-    return {"rows_updated": update_action(action_id, name, priority, due, description)}
+def update_action_endpoint(action_id: int, name: str, priority: str, due: str, description: str, status: bool):
+    return {"rows_updated": update_action(action_id, name, priority, due, description, status)}
 
 
 @app.put("/subactions/{subaction_id}")
-def update_subaction_endpoint(subaction_id: int, name: str, description: str, due: str, priority: str):
-    return {"rows_updated": update_subaction(subaction_id, name, description, due, priority)}
+def update_subaction_endpoint(subaction_id: int, name: str, description: str, due: str, priority: str, status: bool):
+    return {"rows_updated": update_subaction(subaction_id, name, description, due, priority, status)}
 
 
 # --- DELETE ---
