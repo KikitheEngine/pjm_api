@@ -7,7 +7,7 @@ def get_connection():
         host="dpg-d7kjaeosfn5c73dg0gb0-a.oregon-postgres.render.com",
         database="projectmanagement_ckmw",
         user="projectmanagement_ckmw_user",
-        password=os.getenv("DB_PASSWORD"),
+        password="dX9UgUX36rXJFuJG6EUGN25vUjOn0U7A",
         port=5432,
         sslmode="require"
     )
